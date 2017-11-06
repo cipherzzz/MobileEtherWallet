@@ -4,6 +4,7 @@ import { Provider } from "react-redux";
 import { configureStore } from "./Store";
 import { registerScreens } from "./Screens";
 import Navigation from "./Navigation";
+import {loadIcons} from "./util/Icons"
 
 
 // --------------------------------------
@@ -15,7 +16,12 @@ export default function App() {
 
   registerScreens(store, Provider);
 
-  // start the app
-  Navigation.init();
+  Promise.all([
+    loadIcons,
+  ]).then(()=>{
+    // start the app
+    Navigation.init();
+  });
+
 }
 
