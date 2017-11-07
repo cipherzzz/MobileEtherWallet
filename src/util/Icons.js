@@ -5,12 +5,12 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 const icons = {
   send: {
-    name: "md-more",
+    name: "ios-send-outline",
     size: getIconSize(30),
     color: "green"
   },
   receive: {
-    name: "md-more",
+    name: "ios-cash-outline",
     size: getIconSize(30),
     color: "green"
   },

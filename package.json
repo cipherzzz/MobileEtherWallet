@@ -7,6 +7,7 @@
 		"test": "jest"
 	},
 	"dependencies": {
+		"glamorous-native": "^1.2.0",
 		"react": "15.4.2",
 		"react-native": "0.42.3",
 		"react-native-camera": "^0.5.1",

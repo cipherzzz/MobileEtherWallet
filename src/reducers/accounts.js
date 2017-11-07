@@ -4,8 +4,11 @@ const ACTION_ACCOUNT_CREATE_ADDRESS = 'ACCOUNT_CREATE_ADDRESS';
 
 
 const InitialState = {
-    account: {},
-};
+    //list: [{name: "dummy address", address: "0X123abcd", seed: "1234we", pin: "11234"},
+    //    {name: "dummy address 2", address: "0X123abcd2", seed: "123we4", pin: "123234"},
+    //    {name: "dummy address 3", address: "0X123abcd3", seed: "1234rw", pin: "123423"}]
+    list: []
+    };
 
 // actions
 function createAddress() {
