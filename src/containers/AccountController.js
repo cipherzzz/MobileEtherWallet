@@ -2,17 +2,23 @@
 
 import React, { Component, PropTypes } from 'react'
 import { StyleSheet, View, ScrollView, Text, TextInput, TouchableOpacity } from 'react-native'
-import AppStyles from '../styles'
-import QrView from './QrView'
+import AppStyles from '../util/Styles'
+import QrView from '../components/QRView'
 
-export default class AccountController extends Component {
+import { connect } from "react-redux";
+
+// state map
+function mapStateToProps(state) {
+    return {
+        account: state.accounts.account
+    };
+}
+
+class AccountController extends Component {
     static propTypes = {
         account: PropTypes.shape({
             address: PropTypes.string.isRequired
         }).isRequired,
-        onNameChange: PropTypes.func.isRequired,
-        onChangePin: PropTypes.func.isRequired,
-        onDelete: PropTypes.func.isRequired
     }
 
     state = {
@@ -121,3 +127,5 @@ const styles = StyleSheet.create({
         flex: 1
     }
 })
+
+export default connect(mapStateToProps)(AccountController);

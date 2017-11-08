@@ -1,9 +1,12 @@
 'use strict'
 
 import React, { Component, PropTypes } from 'react'
-import { Button, View, Text, ListView, RecyclerViewBackedScrollView, StatusBar, StyleSheet } from 'react-native'
+import { Button, View, Text, ListView, ScrollView, StatusBar, StyleSheet } from 'react-native'
 import AccountListRow from '../components/AccountListRow'
 import AppStyles from '../util/Styles'
+import Navigation from '../util/Navigation'
+
+import {setCurrentAccount} from '../reducers/accounts'
 
 import { connect } from "react-redux";
 
@@ -37,27 +40,29 @@ class SendController extends Component {
 
     render () {
 
+        let createButton = <Button
+        style={styles.introButton}
+        onPress={()=>{alert("Request New ETH Address")}}
+        color='green'
+        title='Request New ETH Address'
+            />;
+
         if (!this.props.accounts.length) {
             return (
                 <View style={AppStyles.view}>
         <View style={styles.introContainer}>
         <Text style={styles.introText}>
-            To sign transactions you need at least one account.
+            You need an address in order to Send/Receive Eth
             </Text>
             <View style={AppStyles.buttonContainer}>
-        <Button
-            style={styles.introButton}
-            onPress={()=>{alert("create new account")}}
-            color='green'
-            title='Create Account'
-            accessibilityLabel='Create new account.'
-                />
+            {createButton}
                 </View>
                 </View>
                 </View>
         )
         }
         return (
+             <ScrollView>
             <ListView
         style={AppStyles.listView}
         dataSource={this.state.dataSource}
@@ -68,13 +73,21 @@ class SendController extends Component {
             lowerText={'0x' + rowData.address}
             onPress={() => {
                 highlightRow(sectionID, rowID);
-                alert(JSON.stringify(this.props.accounts[rowID]));
+                let account = this.props.accounts[rowID];
+                this.props.dispatch(setCurrentAccount(account)).then((account)=>{
+                    Navigation.push(this.props.navigator, "AccountController", {
+                    account: account
+                });
+                })
+
             }}
         />
         )
         }}
     >
             </ListView>
+        {createButton}
+                </ScrollView>
     )
     }
 }

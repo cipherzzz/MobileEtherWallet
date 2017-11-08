@@ -4,11 +4,13 @@ import { Navigation } from "react-native-navigation";
 
 import SendController from "./containers/SendController";
 import ReceiveController from "./containers/ReceiveController";
+import AccountController from "./containers/AccountController";
 
 
 export const screensMap = {
   SendController,
   ReceiveController,
+  AccountController
 };
 
 export function registerScreens(store, Provider) {
