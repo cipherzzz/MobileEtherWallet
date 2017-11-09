@@ -1,4 +1,8 @@
 rootProject.name = 'MobileEtherWallet'
+include ':react-native-secure-randombytes'
+project(':react-native-secure-randombytes').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-secure-randombytes/android')
+include ':react-native-safe-crypto'
+project(':react-native-safe-crypto').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-safe-crypto/android')
 include ':react-native-vector-icons'
 project(':react-native-vector-icons').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-vector-icons/android')
 include ':react-native-navigation'

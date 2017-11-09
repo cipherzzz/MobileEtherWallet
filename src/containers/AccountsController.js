@@ -4,37 +4,36 @@ import React, { Component, PropTypes } from 'react'
 import { Button, View, Text, ListView, ScrollView, StatusBar, StyleSheet } from 'react-native'
 import AccountListRow from '../components/AccountListRow'
 import AppStyles from '../util/Styles'
-import Navigation from '../util/Navigation'
+import Navigation from '../Navigation'
+import EthJs from 'ethereumjs-wallet-react-native'
 
-import {setCurrentAccount} from '../reducers/accounts'
+import {setCurrentAccount, createWallet} from '../reducers/accounts'
 
 import { connect } from "react-redux";
 
 // state map
 function mapStateToProps(state) {
     return {
-        accounts: state.accounts.list
+        wallet: state.accounts.wallet,
     };
 }
 
-class SendController extends Component {
+class AccountsController extends Component {
     static propTypes = {
-        accounts: PropTypes.arrayOf(PropTypes.shape({
-            address: PropTypes.string.isRequired
-        })).isRequired
+        wallet: PropTypes.any.isRequired
     }
 
     constructor (props) {
         super(props)
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
         this.state = {
-            dataSource: ds.cloneWithRows(props.accounts)
+            dataSource: ds.cloneWithRows(props.wallet.addresses)
         }
     }
 
     componentWillReceiveProps (nextProps) {
         this.setState({
-            dataSource: this.state.dataSource.cloneWithRows(nextProps.accounts)
+            dataSource: this.state.dataSource.cloneWithRows(nextProps.wallet.addresses)
         })
     }
 
@@ -42,12 +41,16 @@ class SendController extends Component {
 
         let createButton = <Button
         style={styles.introButton}
-        onPress={()=>{alert("Request New ETH Address")}}
+        onPress={()=>{
+            this.props.dispatch(createWallet())
+                .then((wallet)=>{})
+                .catch((error)=>{alert(error)})
+        }}
         color='green'
         title='Request New ETH Address'
             />;
 
-        if (!this.props.accounts.length) {
+        if (!this.props.wallet.addresses.length) {
             return (
                 <View style={AppStyles.view}>
         <View style={styles.introContainer}>
@@ -73,7 +76,7 @@ class SendController extends Component {
             lowerText={'0x' + rowData.address}
             onPress={() => {
                 highlightRow(sectionID, rowID);
-                let account = this.props.accounts[rowID];
+                let account = this.props.wallet.addresses[rowID];
                 this.props.dispatch(setCurrentAccount(account)).then((account)=>{
                     Navigation.push(this.props.navigator, "AccountController", {
                     account: account
@@ -106,4 +109,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default connect(mapStateToProps)(SendController);
+export default connect(mapStateToProps)(AccountsController);

@@ -3,6 +3,8 @@ package com.mobileetherwallet;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.bitgo.randombytes.RandomBytesPackage;
+import co.airbitz.fastcrypto.RNFastCryptoPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.reactnativenavigation.NavigationReactPackage;
 import com.reactlibrary.RNSecureStoragePackage;
@@ -27,6 +29,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RandomBytesPackage(),
+            new RNFastCryptoPackage(),
             new VectorIconsPackage(),
             new NavigationReactPackage(),
             new RNSecureStoragePackage(),

@@ -14,6 +14,11 @@ const icons = {
     size: getIconSize(30),
     color: "green"
   },
+  accounts: {
+    name: "ios-list-outline",
+    size: getIconSize(30),
+    color: "green"
+  },
 };
 
 let loadedIcons = {};

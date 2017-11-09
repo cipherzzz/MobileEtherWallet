@@ -2,13 +2,13 @@
 import React from 'react';
 import { Navigation } from "react-native-navigation";
 
-import SendController from "./containers/SendController";
+import AccountsController from "./containers/AccountsController";
 import ReceiveController from "./containers/ReceiveController";
 import AccountController from "./containers/AccountController";
 
 
 export const screensMap = {
-  SendController,
+  AccountsController,
   ReceiveController,
   AccountController
 };
