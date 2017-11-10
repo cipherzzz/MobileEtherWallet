@@ -7,5 +7,7 @@ It has three major functions
 - Scan deposit QR code
 - Send ether
 
+***Note have to use 'rn-nodeify --install --hack' and add the generated shim.js to the app
+
 It utilizes the https://infura.io/ webservices for interaction with the ethereum blockchain
 

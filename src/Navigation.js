@@ -15,7 +15,7 @@ function init() {
         title: "Accounts",
         label: "Accounts",
         screen: "AccountsController",
-        icon: Icons.accounts
+        icon: Icons.accounts,
       },
       {
         title: "Receive",
@@ -33,7 +33,11 @@ function init() {
     passProps: {},
     animationType: "slide-down",
     appStyle: {
-      orientation: "portrait"
+      orientation: "portrait",
+      navBarTextColor: Colors.Grey50, // change the text color of the title (remembered across pushes)
+      navBarBackgroundColor: Colors.White,
+      navBarButtonColor: Colors.Red,
+      screenBackgroundColor: Colors.Grey10
     }
   });
 }

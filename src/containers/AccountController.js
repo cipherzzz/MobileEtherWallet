@@ -4,21 +4,21 @@ import React, { Component, PropTypes } from 'react'
 import { StyleSheet, View, ScrollView, Text, TextInput, TouchableOpacity } from 'react-native'
 import AppStyles from '../util/Styles'
 import QrView from '../components/QRView'
+import Blockies from 'react-native-blockies';
+import Colors from '../util/Colors';
 
 import { connect } from "react-redux";
 
 // state map
 function mapStateToProps(state) {
     return {
-        account: state.accounts.account
+        account: state.accounts.getIn(["list", state.accounts.get("currentAccountId")])
     };
 }
 
 class AccountController extends Component {
     static propTypes = {
-        account: PropTypes.shape({
-            address: PropTypes.string.isRequired
-        }).isRequired,
+        account: PropTypes.object.isRequired
     }
 
     state = {
@@ -31,6 +31,8 @@ class AccountController extends Component {
     this.setState({
         name: this.props.account.name
 })
+
+alert(JSON.stringify(this.props.account))
 }
 
 cancelEdit = () => {
@@ -53,6 +55,11 @@ setEditing (isEditing) {
 render () {
     return (
         <ScrollView style={AppStyles.view}>
+<Blockies
+    blockies={this.props.account.get("address")} //string content to generate icon
+    size={50} // blocky icon size
+    style={{width:50, height:50, backgroundColor: Colors.Grey10}} // style of the view will wrap the icon
+/>
         <TouchableOpacity
     style={styles.wrapper}
     onLongPress={this.startEdit}
@@ -70,7 +77,7 @@ render () {
     onSubmitEditing={this.finishEdit}
 />
 ) : (
-    <Text style={AppStyles.valueText}>{this.props.account.name ? this.props.account.name : 'no name'}</Text>
+    <Text style={AppStyles.valueText}>{this.props.account.get("name") ? this.props.account.get("name") : 'no name'}</Text>
 )
 }
 </View>
@@ -78,11 +85,11 @@ render () {
 
     <View>
     <Text style={AppStyles.hintText}>Address</Text>
-    <Text selectable style={AppStyles.valueText}>0x{this.props.account.address}</Text>
+    <Text selectable style={AppStyles.valueText}>{this.props.account.get("address")}</Text>
     </View>
 
     <View style={styles.qr}>
-<QrView text={this.props.account.address} />
+<QrView text={this.props.account.get("address")} />
 </View>
 
     <View style={[styles.actionsContainer, AppStyles.buttonContainer]}>

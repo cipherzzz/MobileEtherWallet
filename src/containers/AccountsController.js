@@ -1,111 +1,126 @@
 'use strict'
 
 import React, { Component, PropTypes } from 'react'
-import { Button, View, Text, ListView, ScrollView, StatusBar, StyleSheet } from 'react-native'
+import { Button, View, Text, ListView, ScrollView, StatusBar, StyleSheet, TextInput } from 'react-native'
 import AccountListRow from '../components/AccountListRow'
 import AppStyles from '../util/Styles'
 import Navigation from '../Navigation'
+import Immutable from 'immutable'
 import EthJs from 'ethereumjs-wallet-react-native'
 
-import {setCurrentAccount, createWallet} from '../reducers/accounts'
+
+import {selectAccount, createAccount} from '../reducers/accounts'
 
 import { connect } from "react-redux";
 
 // state map
 function mapStateToProps(state) {
+
     return {
-        wallet: state.accounts.wallet,
+        list: state.accounts.get("list").keySeq().toArray(),
+        accounts: state.accounts.get("list")
     };
 }
 
 class AccountsController extends Component {
     static propTypes = {
-        wallet: PropTypes.any.isRequired
+        list: PropTypes.any.isRequired
     }
 
     constructor (props) {
         super(props)
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
         this.state = {
-            dataSource: ds.cloneWithRows(props.wallet.addresses)
+            dataSource: ds.cloneWithRows(props.list),
+            newAccountName: undefined
         }
+
+        this.props.navigator.setButtons({
+            rightButtons: [{id: "add", title: "Add"}]
+        });
+
+        this.props.navigator.setOnNavigatorEvent(event => {
+            if (event.id === "add") {
+            this.createAccount();
+        }
+    });
     }
 
     componentWillReceiveProps (nextProps) {
         this.setState({
-            dataSource: this.state.dataSource.cloneWithRows(nextProps.wallet.addresses)
+            dataSource: this.state.dataSource.cloneWithRows(nextProps.list),
         })
+    }
+
+    createAccount() {
+        this.props.dispatch(createAccount(this.state.newAccountName))
+            .then((account)=>{
+            this.props.dispatch(selectAccount(account.publicKey)).then((accountId)=>{
+            Navigation.push(this.props.navigator, "AccountController");
+            })})
+            .catch((error)=>{alert(error)})
     }
 
     render () {
 
-        let createButton = <Button
-        style={styles.introButton}
-        onPress={()=>{
-            this.props.dispatch(createWallet())
-                .then((wallet)=>{})
-                .catch((error)=>{alert(error)})
-        }}
-        color='green'
-        title='Request New ETH Address'
-            />;
 
-        if (!this.props.wallet.addresses.length) {
+    return (
+        <View>
+        {this.getAccountsOrPlaceholder()}
+        </View>
+        );
+
+
+        }
+
+    getAccountsOrPlaceholder(){
+        if (this.props.list.length === 0) {
             return (
-                <View style={AppStyles.view}>
-        <View style={styles.introContainer}>
-        <Text style={styles.introText}>
-            You need an address in order to Send/Receive Eth
-            </Text>
-            <View style={AppStyles.buttonContainer}>
-            {createButton}
-                </View>
-                </View>
-                </View>
+        <Text style={styles.introText}>{"Tap '+' to create an ETH Account"}</Text>
+        )
+        } else {
+
+            return (
+                <ScrollView>
+                <ListView
+            style={AppStyles.listView}
+            enableEmptySections={true}
+            dataSource={this.state.dataSource}
+            renderRow={(rowData, sectionID: number, rowID: number, highlightRow) => {
+                let account = this.props.accounts.get(rowData);
+                return (
+                    <AccountListRow
+                        upperText={account.get("name") ? account.get("name") : 'no name'}
+                        lowerText={account.get("address")}
+                        onPress= {
+                            () => {
+                                highlightRow(sectionID, rowID);
+                                this.props.dispatch(selectAccount(account.get("publicKey"))).then((account)=>{
+                                    Navigation.push(this.props.navigator, "AccountController");
+                                });
+                                }
+                            }
+                    />
+            )
+            }}>
+        </ListView>
+        </ScrollView>
         )
         }
-        return (
-             <ScrollView>
-            <ListView
-        style={AppStyles.listView}
-        dataSource={this.state.dataSource}
-        renderRow={(rowData, sectionID: number, rowID: number, highlightRow) => {
-            return (
-                <AccountListRow
-            upperText={rowData.name ? rowData.name : 'no name'}
-            lowerText={'0x' + rowData.address}
-            onPress={() => {
-                highlightRow(sectionID, rowID);
-                let account = this.props.wallet.addresses[rowID];
-                this.props.dispatch(setCurrentAccount(account)).then((account)=>{
-                    Navigation.push(this.props.navigator, "AccountController", {
-                    account: account
-                });
-                })
-
-            }}
-        />
-        )
-        }}
-    >
-            </ListView>
-        {createButton}
-                </ScrollView>
-    )
     }
 }
+
 
 const styles = StyleSheet.create({
     introContainer: {
         padding: 30,
         flex: 1,
-        flexDirection: 'column',
         justifyContent: 'center'
     },
     introText: {
         textAlign: 'center',
         fontSize: 16,
-        marginBottom: 20
+        marginTop: 60,
     }
 })
 

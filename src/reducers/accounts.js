@@ -2,58 +2,37 @@
 import {network} from "../util/Constants";
 import { asyncRandomBytes } from 'react-native-secure-randombytes'
 import safeCrypto from 'react-native-safe-crypto'
+import Immutable from 'immutable';
 import EthJs from 'ethereumjs-wallet-react-native'
 
 window.randomBytes = asyncRandomBytes
 window.scryptsy = safeCrypto.scrypt
 
-const ACTION_ACCOUNT_CREATE_ADDRESS = 'ACCOUNT_CREATE_ADDRESS';
 const ACTION_ACCOUNT_SET_ACCOUNT = 'ACCOUNT_SET_ACCOUNT';
-const ACTION_ACCOUNT_SET_WALLET = 'ACCOUNT_SET_WALLET';
+const ACTION_ACCOUNT_SET_CURRENT_ACCOUNT = 'ACCOUNT_SET_CURRENT_ACCOUNT';
 
 
-const InitialState = {
-    account: {},
-    wallet: {
-        name: "",
-        privateKey: "",
-        publicKey: "",
-        addresses: [],
-    }
-    };
+const InitialState = Immutable.fromJS({
+    list: {},
+    currentAccountId: ""
+    });
 
 // actions
-export function createWallet() {
+export function createAccount(name) {
     return (dispatch, getState) => {
         return new Promise((resolve, reject) => {
                 EthJs.generate()
                     .then((response)=>{
-
-                        var wallet = {};
-                        wallet.privateKey = response.getPrivateKeyString();
-                        wallet.publicKey = response.getPublicKeyString();
-                        wallet.addresses = [{name: "", address: response.getAddressString()}];
-                        dispatch(setWallet(wallet));
-                        return resolve(wallet)
+                        var account = {};
+                        account.name = name;
+                        account.privateKey = response.getPrivateKeyString();
+                        account.publicKey = response.getPublicKeyString();
+                        account.address = response.getAddressString();
+                        dispatch(setAccount(account));
+                        return resolve(account)
                     })
                     .catch((error)=>{return reject(error)});
     })
-    };
-}
-
-function setWallet(wallet) {
-    return {
-        type: ACTION_ACCOUNT_SET_WALLET,
-        wallet: wallet
-    };
-}
-
-export function setCurrentAccount(account) {
-    return (dispatch) => {
-        return new Promise((resolve, reject) => {
-            dispatch(setAccount(account));
-            return resolve(account);
-        });
     };
 }
 
@@ -63,6 +42,23 @@ function setAccount(account) {
         account: account
     };
 }
+
+function setCurrentAccount(accountId) {
+    return {
+        type: ACTION_ACCOUNT_SET_CURRENT_ACCOUNT,
+        accountId: accountId
+    };
+}
+
+export function selectAccount(accountId) {
+    return (dispatch) => {
+        return new Promise((resolve, reject) => {
+            dispatch(setCurrentAccount(accountId));
+            return resolve(accountId);
+        });
+    };
+}
+
 
 //https://ropsten.infura.io/fYegUFu9HulgkCPiCTuy
 export function createNewAddress(account) {
@@ -77,22 +73,16 @@ export function createNewAddress(account) {
 // reducer
 export default function reducer(state = InitialState, action) {
 
-    console.log(JSON.stringify(action))
+    console.log(JSON.stringify(action));
 
     switch (action.type) {
-        case ACTION_ACCOUNT_CREATE_ADDRESS:
-            state.status = 'dummy';
-            return state;
 
         case ACTION_ACCOUNT_SET_ACCOUNT:
-            state.account = action.account;
-            return state;
+            return state.setIn(['list', action.account.publicKey], Immutable.Map(action.account));
 
-        case ACTION_ACCOUNT_SET_WALLET:
-            return {
-                ...state,
-                wallet: action.wallet
-            }
+        case ACTION_ACCOUNT_SET_CURRENT_ACCOUNT:
+            return state.set('currentAccountId', action.accountId);
+
     }
 
     // default
