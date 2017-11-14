@@ -1,4 +1,5 @@
 import { Platform, StyleSheet } from 'react-native'
+import Colors from "../util/Colors"
 
 export default StyleSheet.create({
     view: {
@@ -14,8 +15,8 @@ export default StyleSheet.create({
         flex: 1,
     },
     hintText: {
-        fontSize: 14,
-        color: '#ccc',
+        fontSize: 16,
+        color: Colors.Grey70,
         marginBottom: 10,
         marginTop: 10
     },
@@ -25,15 +26,12 @@ export default StyleSheet.create({
         marginBottom: 10
     },
     valueText: {
-        fontSize: 12,
-        color: 'black',
-        marginBottom: 20,
+        fontSize: 14,
+        color: Colors.BlackAlmost,
         fontWeight: 'bold'
     },
     valueTextInput: {
-        height: 35,
-        padding: 5,
-        marginTop: -5
+        height: 40,
     },
     inputValue: {
         color: 'black',

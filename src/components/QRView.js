@@ -2,8 +2,9 @@
 
 import React, { Component, PropTypes } from 'react'
 import { View, StyleSheet } from 'react-native'
-import QRCode from 'react-native-qrcode'
-import AppStyles from '../util/Styles'
+import QRCode from 'react-native-qrcode';
+import AppStyles from '../util/Styles';
+import Navigation from '../Navigation';
 
 export default class QrView extends Component {
     static propTypes = {
@@ -13,6 +14,20 @@ export default class QrView extends Component {
 
     static defaultProps = {
         screen: false
+    }
+
+    constructor(props) {
+        super(props);
+
+        this.props.navigator.setButtons({
+            rightButtons: [{id: "close", title: "Close"}]
+        });
+
+        this.props.navigator.setOnNavigatorEvent(event => {
+            if (event.id === "close") {
+                Navigation.dismissModal();
+            }
+        });
     }
 
     render () {

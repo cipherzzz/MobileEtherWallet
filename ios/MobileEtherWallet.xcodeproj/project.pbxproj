@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -35,6 +36,7 @@
 		9C97D9B98C07477397D27A8E /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 55E279381F9644A18D005AF9 /* Octicons.ttf */; };
 		9EE8B0B69CA546D78146BE4D /* libReactNativeNavigation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A610C2D99B947BBA71494E4 /* libReactNativeNavigation.a */; };
 		AC103467D8BD4D8D9AF0C3AC /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8CBC9BEE164F4B9AB47F9E3D /* Feather.ttf */; };
+		BA377BCB33C04714ABBB4963 /* libRNClipboard.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78EF07A029DC4A20852D9B7F /* libRNClipboard.a */; };
 		C817A024F5574E8CB2C0A856 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 803645EE31D44345872998CE /* EvilIcons.ttf */; };
 		D40CCA20B1CD4AD69537451C /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D7964ED131614A7690A17EAD /* FontAwesome.ttf */; };
 		E0ABB9417B434261865095B9 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0E7EA38B75494F94ABD5CF7B /* MaterialCommunityIcons.ttf */; };
@@ -247,6 +249,13 @@
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = RNOS;
 		};
+		6352108A1FBAA34100BE7CAE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = ACE8445CE89A405DBA6FED7F /* RNClipboard.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 93D925B51B577A3A0021F250;
+			remoteInfo = RNClipboard;
+		};
 		63A4E7811FAF887C0097D488 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BC7BCFEAB677471EAB46D42B /* RCTCamera.xcodeproj */;
@@ -317,12 +326,14 @@
 		6A610C2D99B947BBA71494E4 /* libReactNativeNavigation.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libReactNativeNavigation.a; sourceTree = "<group>"; };
 		733EAAF8E9B84144BFBD12A3 /* libRNOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNOS.a; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
+		78EF07A029DC4A20852D9B7F /* libRNClipboard.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNClipboard.a; sourceTree = "<group>"; };
 		803645EE31D44345872998CE /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		87F7063C710A42A0BC1D32C9 /* UdpSockets.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = UdpSockets.xcodeproj; path = "../node_modules/react-native-udp/ios/UdpSockets.xcodeproj"; sourceTree = "<group>"; };
 		8CBC9BEE164F4B9AB47F9E3D /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		9A2FFAD221AF45EF929575CC /* libRNSecureStorage.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNSecureStorage.a; sourceTree = "<group>"; };
 		9F1DFCD8FD174EAF87233B23 /* RNRandomBytes.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNRandomBytes.xcodeproj; path = "../node_modules/react-native-secure-randombytes/RNRandomBytes.xcodeproj"; sourceTree = "<group>"; };
+		ACE8445CE89A405DBA6FED7F /* RNClipboard.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNClipboard.xcodeproj; path = "../node_modules/react-native-clipboard/RNClipboard.xcodeproj"; sourceTree = "<group>"; };
 		B713C77FD4CB4117903D8C9C /* ReactNativeNavigation.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeNavigation.xcodeproj; path = "../node_modules/react-native-navigation/ios/ReactNativeNavigation.xcodeproj"; sourceTree = "<group>"; };
 		B9C1E672795C4E4588D6CCBE /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		BC7BCFEAB677471EAB46D42B /* RCTCamera.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTCamera.xcodeproj; path = "../node_modules/react-native-camera/ios/RCTCamera.xcodeproj"; sourceTree = "<group>"; };
@@ -361,6 +372,7 @@
 				9224BC1EA96D4090874977A9 /* libRNOS.a in Frameworks */,
 				0137183C74C4426D8C9344FC /* libTcpSockets.a in Frameworks */,
 				5AEF028E324344368CC398D0 /* libUdpSockets.a in Frameworks */,
+				BA377BCB33C04714ABBB4963 /* libRNClipboard.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -531,6 +543,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		6352106C1FBAA34100BE7CAE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6352108B1FBAA34100BE7CAE /* libRNClipboard.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		63A4E7791FAF887B0097D488 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -587,6 +607,7 @@
 				E09C1944B32D442283F57422 /* RNOS.xcodeproj */,
 				3727FED0B18E4933AF124B56 /* TcpSockets.xcodeproj */,
 				87F7063C710A42A0BC1D32C9 /* UdpSockets.xcodeproj */,
+				ACE8445CE89A405DBA6FED7F /* RNClipboard.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -714,6 +735,10 @@
 				{
 					ProductGroup = 63A4E7A11FAF94450097D488 /* Products */;
 					ProjectRef = B713C77FD4CB4117903D8C9C /* ReactNativeNavigation.xcodeproj */;
+				},
+				{
+					ProductGroup = 6352106C1FBAA34100BE7CAE /* Products */;
+					ProjectRef = ACE8445CE89A405DBA6FED7F /* RNClipboard.xcodeproj */;
 				},
 				{
 					ProductGroup = 635210001FB3B31900BE7CAE /* Products */;
@@ -955,6 +980,13 @@
 			remoteRef = 635210421FB4F57500BE7CAE /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		6352108B1FBAA34100BE7CAE /* libRNClipboard.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNClipboard.a;
+			remoteRef = 6352108A1FBAA34100BE7CAE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		63A4E7821FAF887C0097D488 /* libRCTCamera.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1072,11 +1104,13 @@
 					"$(SRCROOT)/../node_modules/react-native-os/ios",
 					"$(SRCROOT)/../node_modules/react-native-tcp/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-udp/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-clipboard/RNClipboard",
 				);
 				INFOPLIST_FILE = MobileEtherWallet/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/MobileEtherWallet\"",
 					"\"$(SRCROOT)/MobileEtherWallet\"",
 					"\"$(SRCROOT)/MobileEtherWallet\"",
 					"\"$(SRCROOT)/MobileEtherWallet\"",
@@ -1109,11 +1143,13 @@
 					"$(SRCROOT)/../node_modules/react-native-os/ios",
 					"$(SRCROOT)/../node_modules/react-native-tcp/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-udp/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-clipboard/RNClipboard",
 				);
 				INFOPLIST_FILE = MobileEtherWallet/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/MobileEtherWallet\"",
 					"\"$(SRCROOT)/MobileEtherWallet\"",
 					"\"$(SRCROOT)/MobileEtherWallet\"",
 					"\"$(SRCROOT)/MobileEtherWallet\"",

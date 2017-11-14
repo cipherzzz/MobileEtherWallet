@@ -32,6 +32,7 @@
     "react-native": "0.42.3",
     "react-native-blockies": "^1.0.2",
     "react-native-camera": "^0.5.1",
+    "react-native-clipboard": "^0.0.5",
     "react-native-crypto": "^2.1.1",
     "react-native-http": "github:tradle/react-native-http#834492d",
     "react-native-level-fs": "^3.0.0",

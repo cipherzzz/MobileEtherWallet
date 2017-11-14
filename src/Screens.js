@@ -5,12 +5,16 @@ import { Navigation } from "react-native-navigation";
 import AccountsController from "./containers/AccountsController";
 import ReceiveController from "./containers/ReceiveController";
 import AccountController from "./containers/AccountController";
+import QRView from "./components/QRView";
+import ViewNotification from "./components/ViewNotification";
 
 
 export const screensMap = {
   AccountsController,
   ReceiveController,
-  AccountController
+  AccountController,
+  QRView,
+  ViewNotification
 };
 
 export function registerScreens(store, Provider) {

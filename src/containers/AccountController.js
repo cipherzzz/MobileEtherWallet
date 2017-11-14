@@ -6,9 +6,13 @@ import AppStyles from '../util/Styles'
 import QrView from '../components/QRView'
 import Blockies from 'react-native-blockies';
 import Colors from '../util/Colors';
+import Ionicon from "react-native-vector-icons/Ionicons";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
+import Clipboard from "react-native-clipboard";
+import Navigation from "../Navigation";
 
 import { connect } from "react-redux";
-import {setAccountName} from '../reducers/accounts';
+import {setAccountName, deleteAccount} from '../reducers/accounts';
 
 // state map
 function mapStateToProps(state) {
@@ -32,7 +36,9 @@ class AccountController extends Component {
 
         this.props.navigator.setOnNavigatorEvent(event => {
             if (event.id === "delete") {
-                alert("delete");
+                //Had some timing issues with required props - Clean this up
+                Navigation.pop(this.props.navigator);
+                props.dispatch(deleteAccount(props.account.get("publicKey")));
             }
         });
     }
@@ -40,28 +46,52 @@ class AccountController extends Component {
     render() {
         return (
             <ScrollView style={AppStyles.view}>
-                <Blockies
-                    blockies={this.props.account.get("address")} //string content to generate icon
-                    size={50} // blocky icon size
-                    style={{width:50, height:50, backgroundColor: Colors.Grey10}} // style of the view will wrap the icon
-                />
                 <View style={styles.wrapper}>
                     <View>
-                        <Text style={AppStyles.hintText}>Name</Text>
-                        <TextInput
-                            style={[AppStyles.valueText, AppStyles.valueTextInput]}
-                            value={this.props.account.get("name")}
-                            autoFocus
-                            onChangeText={(value)=>{this.props.dispatch(setAccountName(this.props.account, value))}}
-                        />
+                        <View style={{flexDirection: "row", alignItems: "center", flex: 6}}>
+                            <Blockies
+                                blockies={this.props.account.get("address")} //string content to generate icon
+                                size={50} // blocky icon size
+                                style={{width:50, height:50, backgroundColor: Colors.Grey10, flex: 1}} // style of the view will wrap the icon
+                            />
+                        <View style={{marginLeft: 10, flex: 5}}>
+                            <Text style={AppStyles.hintText}>Name</Text>
+                            <TextInput
+                                style={[AppStyles.valueText, AppStyles.valueTextInput]}
+                                value={this.props.account.get("name")}
+                                placeholder={"Account Name"}
+                                autoFocus
+                                onChangeText={(value)=>{this.props.dispatch(setAccountName(this.props.account, value))}}
+                            />
+                        </View>
                     </View>
                 </View>
-                <View>
-                    <Text style={AppStyles.hintText}>Address</Text>
-                    <Text selectable style={AppStyles.valueText}>{this.props.account.get("address")}</Text>
+                <View style={{flexDirection: "row", alignItems: "center", flex: 6}}>
+                    <View style={{flex: 5}}>
+                        <Text style={AppStyles.hintText}>Balance</Text>
+                        <Text style={{color: Colors.BlackAlmost}}>{this.props.account.get("balance").toFixed(8)}</Text>
+                    </View>
+                    <TouchableOpacity onPress={()=>
+                    {
+                    Navigation.showModal("QRView",
+                    {text: this.props.account.get("address"),
+                    title: this.props.account.get("name")})
+                    }}>
+                        <FontAwesome name={"qrcode"} size={40} color={Colors.Green}/>
+                    </TouchableOpacity>
                 </View>
-                <View style={styles.qr}>
-                    <QrView text={this.props.account.get("address")}/>
+                <View style={{flexDirection: "row", alignItems: "center", flex: 6}}>
+                    <View style={{flex: 5}}>
+                        <Text style={AppStyles.hintText}>Address</Text>
+                        <Text style={{color: Colors.BlackAlmost}}>{this.props.account.get("address")}</Text>
+                    </View>
+                    <TouchableOpacity onPress={()=>{
+                    Clipboard.set(this.props.account.get("address"));
+                    Navigation.showNotification("Address Copied to Clipboard", "success")
+                    }}>
+                        <Ionicon name={"ios-copy-outline"} size={40} color={Colors.Green}/>
+                    </TouchableOpacity>
+                </View>
                 </View>
             </ScrollView>
         )

@@ -19,6 +19,11 @@ const icons = {
     size: getIconSize(30),
     color: "green"
   },
+  copy: {
+    name: "ion-ios-copy-outline",
+    size: getIconSize(30),
+    color: "green"
+  },
 };
 
 let loadedIcons = {};

@@ -9,6 +9,7 @@ window.randomBytes = asyncRandomBytes
 window.scryptsy = safeCrypto.scrypt
 
 const ACTION_ACCOUNT_SET_ACCOUNT = 'ACCOUNT_SET_ACCOUNT';
+const ACTION_ACCOUNT_REMOVE_ACCOUNT = 'ACCOUNT_REMOVE_ACCOUNT';
 const ACTION_ACCOUNT_SET_ACCOUNT_NAME = 'ACCOUNT_SET_ACCOUNT_NAME';
 const ACTION_ACCOUNT_SET_CURRENT_ACCOUNT = 'ACCOUNT_SET_CURRENT_ACCOUNT';
 
@@ -29,6 +30,7 @@ export function createAccount(name) {
                         account.privateKey = response.getPrivateKeyString();
                         account.publicKey = response.getPublicKeyString();
                         account.address = response.getAddressString();
+                        account.balance = 0.0000000000;
                         dispatch(setAccount(account));
                         return resolve(account)
                     })
@@ -59,10 +61,26 @@ function setCurrentAccount(accountId) {
     };
 }
 
+function removeAccount(accountId) {
+    return {
+        type: ACTION_ACCOUNT_REMOVE_ACCOUNT,
+        accountId: accountId
+    };
+}
+
 export function selectAccount(accountId) {
     return (dispatch) => {
         return new Promise((resolve, reject) => {
             dispatch(setCurrentAccount(accountId));
+            return resolve(accountId);
+        });
+    };
+}
+
+export function deleteAccount(accountId) {
+    return (dispatch) => {
+        return new Promise((resolve, reject) => {
+            dispatch(removeAccount(accountId));
             return resolve(accountId);
         });
     };
@@ -88,6 +106,9 @@ export default function reducer(state = InitialState, action) {
 
         case ACTION_ACCOUNT_SET_ACCOUNT:
             return state.setIn(['list', action.account.publicKey], Immutable.Map(action.account));
+
+        case ACTION_ACCOUNT_REMOVE_ACCOUNT:
+            return state.deleteIn(['list', action.accountId]);
 
         case ACTION_ACCOUNT_SET_ACCOUNT_NAME:
             return state.setIn(['list', action.accountId, "name"], action.name);
