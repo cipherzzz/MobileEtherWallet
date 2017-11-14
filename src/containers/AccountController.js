@@ -8,6 +8,7 @@ import Blockies from 'react-native-blockies';
 import Colors from '../util/Colors';
 
 import { connect } from "react-redux";
+import {setAccountName} from '../reducers/accounts';
 
 // state map
 function mapStateToProps(state) {
@@ -19,96 +20,52 @@ function mapStateToProps(state) {
 class AccountController extends Component {
     static propTypes = {
         account: PropTypes.object.isRequired
+    };
+
+
+    constructor(props) {
+        super(props);
+
+        this.props.navigator.setButtons({
+            rightButtons: [{id: "delete", title: "Delete"}]
+        });
+
+        this.props.navigator.setOnNavigatorEvent(event => {
+            if (event.id === "delete") {
+                alert("delete");
+            }
+        });
     }
 
-    state = {
-        isEditing: false,
-        name: this.props.account.name
+    render() {
+        return (
+            <ScrollView style={AppStyles.view}>
+                <Blockies
+                    blockies={this.props.account.get("address")} //string content to generate icon
+                    size={50} // blocky icon size
+                    style={{width:50, height:50, backgroundColor: Colors.Grey10}} // style of the view will wrap the icon
+                />
+                <View style={styles.wrapper}>
+                    <View>
+                        <Text style={AppStyles.hintText}>Name</Text>
+                        <TextInput
+                            style={[AppStyles.valueText, AppStyles.valueTextInput]}
+                            value={this.props.account.get("name")}
+                            autoFocus
+                            onChangeText={(value)=>{this.props.dispatch(setAccountName(this.props.account, value))}}
+                        />
+                    </View>
+                </View>
+                <View>
+                    <Text style={AppStyles.hintText}>Address</Text>
+                    <Text selectable style={AppStyles.valueText}>{this.props.account.get("address")}</Text>
+                </View>
+                <View style={styles.qr}>
+                    <QrView text={this.props.account.get("address")}/>
+                </View>
+            </ScrollView>
+        )
     }
-
-    startEdit = () => {
-    this.setEditing(true)
-    this.setState({
-        name: this.props.account.name
-})
-
-alert(JSON.stringify(this.props.account))
-}
-
-cancelEdit = () => {
-    this.setEditing(false)
-}
-
-finishEdit = () => {
-    this.setEditing(false)
-    this.props.onNameChange(this.props.account, this.state.name)
-}
-
-updateName = (name) => {
-    this.setState({ name })
-}
-
-setEditing (isEditing) {
-    this.setState({ isEditing })
-}
-
-render () {
-    return (
-        <ScrollView style={AppStyles.view}>
-<Blockies
-    blockies={this.props.account.get("address")} //string content to generate icon
-    size={50} // blocky icon size
-    style={{width:50, height:50, backgroundColor: Colors.Grey10}} // style of the view will wrap the icon
-/>
-        <TouchableOpacity
-    style={styles.wrapper}
-    onLongPress={this.startEdit}
->
-<View>
-    <Text style={AppStyles.hintText}>Name</Text>
-    { this.state.isEditing
-        ? (
-    <TextInput
-        style={[AppStyles.valueText, AppStyles.valueTextInput]}
-    value={this.state.name}
-    autoFocus
-    onChangeText={this.updateName}
-    onEndEditing={this.cancelEdit}
-    onSubmitEditing={this.finishEdit}
-/>
-) : (
-    <Text style={AppStyles.valueText}>{this.props.account.get("name") ? this.props.account.get("name") : 'no name'}</Text>
-)
-}
-</View>
-    </TouchableOpacity>
-
-    <View>
-    <Text style={AppStyles.hintText}>Address</Text>
-    <Text selectable style={AppStyles.valueText}>{this.props.account.get("address")}</Text>
-    </View>
-
-    <View style={styles.qr}>
-<QrView text={this.props.account.get("address")} />
-</View>
-
-    <View style={[styles.actionsContainer, AppStyles.buttonContainer]}>
-<TouchableOpacity
-    style={styles.actionButtonContainer}
-    onPress={() => this.props.onChangePin(this.props.account)}
->
-<Text style={styles.changePinText}>Change PIN</Text>
-    </TouchableOpacity>
-    <TouchableOpacity
-    style={styles.actionButtonContainer}
-    onPress={() => this.props.onDelete(this.props.account)}
->
-<Text style={styles.deleteText}>Delete</Text>
-    </TouchableOpacity>
-    </View>
-    </ScrollView>
-)
-}
 }
 
 const styles = StyleSheet.create({

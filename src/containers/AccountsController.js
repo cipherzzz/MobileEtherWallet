@@ -17,22 +17,24 @@ import { connect } from "react-redux";
 function mapStateToProps(state) {
 
     return {
-        list: state.accounts.get("list").keySeq().toArray(),
+        list: state.accounts.get("list").valueSeq().toArray(),
         accounts: state.accounts.get("list")
     };
 }
 
 class AccountsController extends Component {
     static propTypes = {
+        accounts: PropTypes.any.isRequired,
         list: PropTypes.any.isRequired
     }
 
-    constructor (props) {
+
+
+    constructor(props) {
         super(props)
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
         this.state = {
             dataSource: ds.cloneWithRows(props.list),
-            newAccountName: undefined
         }
 
         this.props.navigator.setButtons({
@@ -41,53 +43,57 @@ class AccountsController extends Component {
 
         this.props.navigator.setOnNavigatorEvent(event => {
             if (event.id === "add") {
-            this.createAccount();
-        }
-    });
+                this.createAccount();
+            }
+        });
     }
 
-    componentWillReceiveProps (nextProps) {
+    componentWillReceiveProps(nextProps) {
+        console.log(nextProps.accounts);
         this.setState({
             dataSource: this.state.dataSource.cloneWithRows(nextProps.list),
         })
     }
 
     createAccount() {
-        this.props.dispatch(createAccount(this.state.newAccountName))
-            .then((account)=>{
-            this.props.dispatch(selectAccount(account.publicKey)).then((accountId)=>{
-            Navigation.push(this.props.navigator, "AccountController");
-            })})
-            .catch((error)=>{alert(error)})
+        this.props.dispatch(createAccount())
+            .then((account)=> {
+                this.props.dispatch(selectAccount(account.publicKey)).then((accountId)=> {
+                    Navigation.push(this.props.navigator, "AccountController");
+                })
+            })
+            .catch((error)=> {
+                alert(error)
+            })
     }
 
-    render () {
+    render() {
 
 
-    return (
-        <View>
-        {this.getAccountsOrPlaceholder()}
-        </View>
+        return (
+            <View>
+                {this.getAccountsOrPlaceholder()}
+            </View>
         );
 
 
-        }
+    }
 
-    getAccountsOrPlaceholder(){
+    getAccountsOrPlaceholder() {
         if (this.props.list.length === 0) {
             return (
-        <Text style={styles.introText}>{"Tap '+' to create an ETH Account"}</Text>
-        )
+                <Text style={styles.introText}>{"Tap '+' to create an ETH Account"}</Text>
+            )
         } else {
 
             return (
                 <ScrollView>
-                <ListView
-            style={AppStyles.listView}
-            enableEmptySections={true}
-            dataSource={this.state.dataSource}
-            renderRow={(rowData, sectionID: number, rowID: number, highlightRow) => {
-                let account = this.props.accounts.get(rowData);
+                    <ListView
+                        style={AppStyles.listView}
+                        enableEmptySections={true}
+                        dataSource={this.state.dataSource}
+                        renderRow={(rowData, sectionID: number, rowID: number, highlightRow) => {
+                let account = this.props.accounts.get(rowData.get("publicKey"));
                 return (
                     <AccountListRow
                         upperText={account.get("name") ? account.get("name") : 'no name'}
@@ -103,9 +109,9 @@ class AccountsController extends Component {
                     />
             )
             }}>
-        </ListView>
-        </ScrollView>
-        )
+                    </ListView>
+                </ScrollView>
+            )
         }
     }
 }

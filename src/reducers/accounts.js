@@ -9,6 +9,7 @@ window.randomBytes = asyncRandomBytes
 window.scryptsy = safeCrypto.scrypt
 
 const ACTION_ACCOUNT_SET_ACCOUNT = 'ACCOUNT_SET_ACCOUNT';
+const ACTION_ACCOUNT_SET_ACCOUNT_NAME = 'ACCOUNT_SET_ACCOUNT_NAME';
 const ACTION_ACCOUNT_SET_CURRENT_ACCOUNT = 'ACCOUNT_SET_CURRENT_ACCOUNT';
 
 
@@ -33,6 +34,14 @@ export function createAccount(name) {
                     })
                     .catch((error)=>{return reject(error)});
     })
+    };
+}
+
+export function setAccountName(account, name) {
+    return {
+        type: ACTION_ACCOUNT_SET_ACCOUNT_NAME,
+        accountId: account.get("publicKey"),
+        name: name
     };
 }
 
@@ -73,12 +82,15 @@ export function createNewAddress(account) {
 // reducer
 export default function reducer(state = InitialState, action) {
 
-    console.log(JSON.stringify(action));
+    console.log(action);
 
     switch (action.type) {
 
         case ACTION_ACCOUNT_SET_ACCOUNT:
             return state.setIn(['list', action.account.publicKey], Immutable.Map(action.account));
+
+        case ACTION_ACCOUNT_SET_ACCOUNT_NAME:
+            return state.setIn(['list', action.accountId, "name"], action.name);
 
         case ACTION_ACCOUNT_SET_CURRENT_ACCOUNT:
             return state.set('currentAccountId', action.accountId);
