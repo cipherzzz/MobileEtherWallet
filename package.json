@@ -19,6 +19,7 @@
     "eslint-plugin-react-native": "^3.1.0",
     "eth-lightwallet": "^2.5.6",
     "ethereumjs-wallet-react-native": "^0.6.7",
+    "etherscan-api": "^3.0.11",
     "ethjs-account": "^0.1.4",
     "events": "^1.1.1",
     "glamorous-native": "^1.2.0",

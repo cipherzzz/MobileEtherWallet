@@ -30,6 +30,14 @@ export default StyleSheet.create({
         color: Colors.BlackAlmost,
         fontWeight: 'bold'
     },
+    header: {
+        fontSize: 14,
+        color: Colors.BlackAlmost,
+        fontWeight: 'bold',
+        marginTop: 10,
+        marginBottom: 5,
+        marginLeft: 5,
+    },
     valueTextInput: {
         height: 40,
     },

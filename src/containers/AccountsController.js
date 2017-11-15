@@ -89,9 +89,10 @@ class AccountsController extends Component {
             return (
                 <ScrollView>
                     <ListView
-                        style={AppStyles.listView}
+                        style={[AppStyles.listView]}
                         enableEmptySections={true}
                         dataSource={this.state.dataSource}
+                        renderSectionHeader={()=>{return <Text style={AppStyles.header}>Accounts</Text>}}
                         renderRow={(rowData, sectionID: number, rowID: number, highlightRow) => {
                 let account = this.props.accounts.get(rowData.get("publicKey"));
                 return (
