@@ -10,7 +10,7 @@ import Ionicon from "react-native-vector-icons/Ionicons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Clipboard from "react-native-clipboard";
 import Navigation from "../Navigation";
-import TransactionListView from "../components/TransactionListRow";
+import TransactionRow from "../components/TransactionRow";
 
 import { connect } from "react-redux";
 import {setAccountName, deleteAccount, fetchTransactions, fetchBalance} from '../reducers/accounts';
@@ -28,7 +28,7 @@ function mapStateToProps(state) {
 class AccountController extends Component {
     static propTypes = {
         account: PropTypes.object.isRequired,
-        transactions: PropTypes.object.isRequired,
+        transactions: PropTypes.any.isRequired,
     };
 
 
@@ -48,7 +48,7 @@ class AccountController extends Component {
             if (event.id === "delete") {
                 //Had some timing issues with required props - Clean this up
                 Navigation.pop(this.props.navigator);
-                props.dispatch(deleteAccount(props.account.get("publicKey")));
+                props.dispatch(deleteAccount(props.account.get("address")));
             }
         });
 
@@ -73,19 +73,20 @@ class AccountController extends Component {
         } else {
             return (
                 <ListView
-                    style={[AppStyles.listView]}
+                    style={[{flex: 1, margin: 5}]}
                     enableEmptySections={true}
                     dataSource={this.state.dataSource}
+                    renderSeparator={()=>{return <View style={{height: 1}} /> }}
                     renderSectionHeader={()=>{return <Text style={AppStyles.header}>Transactions</Text>}}
                     renderRow={(rowData, sectionID: number, rowID: number, highlightRow) => {
                 return (
-                    <TransactionListView
-                        upperText={rowData.get("to")}
-                        lowerText={rowData.get("from")}
+                    <TransactionRow
+                        account={this.props.account}
+                        transaction={rowData}
                         onPress= {
                             () => {
                                 highlightRow(sectionID, rowID);
-                                //this.props.dispatch(selectAccount(account.get("publicKey"))).then((account)=>{
+                                //this.props.dispatch(selectAccount(account.get("address"))).then((account)=>{
                                 //    Navigation.push(this.props.navigator, "AccountController");
                                 //});
                                 }
@@ -98,8 +99,9 @@ class AccountController extends Component {
 
     render() {
         return (
-            <ScrollView style={AppStyles.view}>
-                <View style={styles.wrapper}>
+            <ScrollView style={{flex: 1}}>
+                <Text style={{color: Colors.BlackAlmost, margin: 5, fontSize: 15}}>Info</Text>
+                <View style={[styles.wrapper, {backgroundColor: Colors.White, padding: 5}]}>
                     <View>
                         <View style={{flexDirection: "row", alignItems: "center", flex: 6}}>
                             <Blockies
@@ -108,9 +110,9 @@ class AccountController extends Component {
                                 style={{width:50, height:50, backgroundColor: Colors.Grey10, flex: 1}} // style of the view will wrap the icon
                             />
                             <View style={{marginLeft: 10, flex: 5}}>
-                                <Text style={AppStyles.hintText}>Name</Text>
+                                <Text style={styles.name}>Name</Text>
                                 <TextInput
-                                    style={[AppStyles.valueText, AppStyles.valueTextInput]}
+                                    style={styles.nameInput}
                                     value={this.props.account.get("name")}
                                     placeholder={"Account Name"}
                                     autoFocus
@@ -119,11 +121,11 @@ class AccountController extends Component {
                             </View>
                         </View>
                     </View>
-                    <View style={{flexDirection: "row", alignItems: "center", flex: 6}}>
+                    <View style={{flexDirection: "row", alignItems: "center", flex: 6, marginTop: 10}}>
                         <View style={{flex: 5}}>
-                            <Text style={AppStyles.hintText}>Balance</Text>
+                            <Text style={styles.balance}>Balance</Text>
                             <Text
-                                style={{color: Colors.BlackAlmost}}>{this.props.account.get("balance")}</Text>
+                                style={{color: Colors.BlackAlmost}}>{this.props.account.get("balance") + " ETH"}</Text>
                         </View>
                         <TouchableOpacity onPress={()=>
                     {
@@ -134,9 +136,9 @@ class AccountController extends Component {
                             <FontAwesome name={"qrcode"} size={40} color={Colors.Green}/>
                         </TouchableOpacity>
                     </View>
-                    <View style={{flexDirection: "row", alignItems: "center", flex: 6}}>
+                    <View style={{flexDirection: "row", alignItems: "center", flex: 6, marginTop: 10}}>
                         <View style={{flex: 5}}>
-                            <Text style={AppStyles.hintText}>Address</Text>
+                            <Text style={styles.address}>Address</Text>
                             <Text style={{color: Colors.BlackAlmost}}>{this.props.account.get("address")}</Text>
                         </View>
                         <TouchableOpacity onPress={()=>{
@@ -174,7 +176,24 @@ const styles = StyleSheet.create({
     },
     actionButtonContainer: {
         flex: 1
-    }
+    },
+    name: {
+        fontSize: 16,
+        color: Colors.Grey50,
+        marginBottom: 5
+    },
+    nameInput: {
+        fontSize: 16,
+        color: Colors.BlackAlmost
+    },
+    address: {
+        color: Colors.Grey50,
+        fontSize: 14
+    },
+    balance: {
+        color: Colors.Grey50,
+        fontSize: 14
+    },
 })
 
 export default connect(mapStateToProps)(AccountController);

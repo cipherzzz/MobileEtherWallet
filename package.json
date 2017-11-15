@@ -25,6 +25,7 @@
     "glamorous-native": "^1.2.0",
     "https-browserify": "0.0.1",
     "immutable": "^3.8.2",
+    "moment": "^2.19.2",
     "path-browserify": "0.0.0",
     "process": "^0.11.10",
     "querystring-es3": "^0.2.1",

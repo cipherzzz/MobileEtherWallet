@@ -17,15 +17,13 @@ import { connect } from "react-redux";
 function mapStateToProps(state) {
 
     return {
-        list: state.accounts.get("list").valueSeq().toArray(),
-        accounts: state.accounts.get("list")
+        accounts: state.accounts.get("list").valueSeq().toArray(),
     };
 }
 
 class AccountsController extends Component {
     static propTypes = {
         accounts: PropTypes.any.isRequired,
-        list: PropTypes.any.isRequired
     }
 
 
@@ -34,7 +32,7 @@ class AccountsController extends Component {
         super(props)
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
         this.state = {
-            dataSource: ds.cloneWithRows(props.list),
+            dataSource: ds.cloneWithRows(props.accounts),
         }
 
         this.props.navigator.setButtons({
@@ -51,14 +49,14 @@ class AccountsController extends Component {
     componentWillReceiveProps(nextProps) {
         console.log(nextProps.accounts);
         this.setState({
-            dataSource: this.state.dataSource.cloneWithRows(nextProps.list),
+            dataSource: this.state.dataSource.cloneWithRows(nextProps.accounts),
         })
     }
 
     createAccount() {
         this.props.dispatch(createAccount())
             .then((account)=> {
-                this.props.dispatch(selectAccount(account.publicKey)).then((accountId)=> {
+                this.props.dispatch(selectAccount(account.address)).then((accountId)=> {
                     Navigation.push(this.props.navigator, "AccountController");
                 })
             })
@@ -80,7 +78,7 @@ class AccountsController extends Component {
     }
 
     getAccountsOrPlaceholder() {
-        if (this.props.list.length === 0) {
+        if (this.props.accounts.length === 0) {
             return (
                 <Text style={styles.introText}>{"Tap '+' to create an ETH Account"}</Text>
             )
@@ -92,17 +90,18 @@ class AccountsController extends Component {
                         style={[AppStyles.listView]}
                         enableEmptySections={true}
                         dataSource={this.state.dataSource}
+                        renderSeparator={()=>{return <View style={{height: 1}}/>}}
                         renderSectionHeader={()=>{return <Text style={AppStyles.header}>Accounts</Text>}}
                         renderRow={(rowData, sectionID: number, rowID: number, highlightRow) => {
-                let account = this.props.accounts.get(rowData.get("publicKey"));
                 return (
                     <AccountListRow
-                        upperText={account.get("name") ? account.get("name") : 'no name'}
-                        lowerText={account.get("address")}
+                        name={rowData.get("name") ? rowData.get("name") : 'no name'}
+                        address={rowData.get("address")}
+                        balance={rowData.get("balance")}
                         onPress= {
                             () => {
                                 highlightRow(sectionID, rowID);
-                                this.props.dispatch(selectAccount(account.get("publicKey"))).then((account)=>{
+                                this.props.dispatch(selectAccount(rowData.get("address"))).then((account)=>{
                                     Navigation.push(this.props.navigator, "AccountController");
                                 });
                                 }

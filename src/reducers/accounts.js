@@ -17,7 +17,16 @@ const ACTION_ACCOUNT_SET_ACCOUNT_BALANCE = 'ACCOUNT_SET_ACCOUNT_BALANCE';
 const ACTION_ACCOUNT_SET_CURRENT_ACCOUNT = 'ACCOUNT_SET_CURRENT_ACCOUNT';
 
 const InitialState = Immutable.fromJS({
-    list: {},
+    list: {
+        "0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae": {
+            name: "Etherscan Example",
+            privateKey: "privatekey",
+            publicKey: "publickey",
+            address: "0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae",
+            balance: "0",
+            transactions: []
+        }
+    },
     currentAccountId: ""
     });
 
@@ -33,7 +42,7 @@ export function createAccount(name) {
                         account.publicKey = response.getPublicKeyString();
                         account.address = response.getAddressString();
                         account.balance = 0.0000000000;
-                        account.transactions = {};
+                        account.transactions = [];
                         dispatch(setAccount(Immutable.fromJS(account)));
                         return resolve(account)
                     })
@@ -86,7 +95,7 @@ export function fetchBalance(account) {
 export function setAccountName(account, name) {
     return {
         type: ACTION_ACCOUNT_SET_ACCOUNT_NAME,
-        accountId: account.get("publicKey"),
+        accountId: account.get("address"),
         name: name
     };
 }
@@ -94,7 +103,7 @@ export function setAccountName(account, name) {
 export function setAccountBalance(account, balance) {
     return {
         type: ACTION_ACCOUNT_SET_ACCOUNT_BALANCE,
-        accountId: account.get("publicKey"),
+        accountId: account.get("address"),
         balance: balance
     };
 }
@@ -165,10 +174,10 @@ export default function reducer(state = InitialState, action) {
     switch (action.type) {
 
         case ACTION_ACCOUNT_SET_ACCOUNT:
-            return state.setIn(['list', action.account.get("publicKey")], action.account);
+            return state.setIn(['list', action.account.get("address")], action.account);
 
         case ACTION_ACCOUNT_SET_TRANSACTIONS:
-            return state.setIn(['list', action.account.get("publicKey"), "transactions"], action.transactions);
+            return state.setIn(['list', action.account.get("address"), "transactions"], action.transactions);
 
         case ACTION_ACCOUNT_REMOVE_ACCOUNT:
             return state.deleteIn(['list', action.accountId]);
