@@ -8,7 +8,6 @@ export default StyleSheet.create({
     },
     fullscreenView: {
         flex: 1,
-        marginTop: (Platform.OS === 'ios') ? 64 : 54,
         padding: 20
     },
     listView: {

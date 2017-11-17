@@ -6,6 +6,7 @@ import AccountsController from "./containers/AccountsController";
 import ReceiveController from "./containers/ReceiveController";
 import AccountController from "./containers/AccountController";
 import QRView from "./components/QRView";
+import QRScanController from "./containers/QRScanController";
 import ViewNotification from "./components/ViewNotification";
 
 
@@ -14,6 +15,7 @@ export const screensMap = {
   ReceiveController,
   AccountController,
   QRView,
+  QRScanController,
   ViewNotification
 };
 

@@ -52,12 +52,39 @@ export function createAccount(name) {
     };
 }
 
+export function importAccount(data) {
+    return (dispatch, getState) => {
+
+        var account = {};
+        account.name = "";
+        account.privateKey = "";
+        account.publicKey = "";
+        account.address = data.address;
+        account.balance = 0.0000000000;
+        account.transactions = [];
+
+        return new Promise((resolve, reject) => {
+
+            dispatch(fetchBalance(Immutable.fromJS(account)))
+                .then((balance)=>{
+                    //todo - a little dirty
+                    account.balance = balance;
+                    dispatch(setAccount(Immutable.fromJS(account)));
+                    return resolve(account)
+                })
+                .catch((error)=>{
+                    console.log(error)
+                    return reject(error)
+                });
+        })
+    };
+}
+
 export function fetchTransactions(account) {
     return (dispatch, getState) => {
         return new Promise((resolve, reject) => {
-            //const dummyAddress = "0x6E1916C1315b1600232523cF58c726A2F224cCE9"; //Todo replace
             const address = account.get("address");
-            fetch(getTransactionsRequest(Constants.MEW_ADDRESS))
+            fetch(getTransactionsRequest(address))
                 .then((response)=>{
                     response.json()
                         .then((data)=>{
@@ -76,18 +103,24 @@ export function fetchBalance(account) {
     return (dispatch, getState) => {
         return new Promise((resolve, reject) => {
             const address = account.get("address");
-            fetch(getBalanceRequest(Constants.MEW_ADDRESS))
+            fetch(getBalanceRequest(address))
                 .then((response)=>{
                     response.json()
                             .then((data)=>{
-                                console.log(JSON.stringify(data));
+                                console.log("fetch balance "+JSON.stringify(data));
                                 let balance = data.result;
                                 dispatch(setAccountBalance(account, balance));
                                 return resolve(balance)
                             })
-                            .catch((error)=>{return reject(error)});
+                            .catch((error)=>{
+                                console.log("***"+error)
+                                return reject(error)
+                            });
                 })
-                .catch((error)=>{return reject(error)});
+                .catch((error)=>{
+                    console.log(error)
+                    return reject(error)
+                });
         })
     };
 }

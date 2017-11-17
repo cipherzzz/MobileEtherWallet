@@ -36,12 +36,14 @@ class AccountsController extends Component {
         }
 
         this.props.navigator.setButtons({
-            rightButtons: [{id: "add", title: "Add"}]
+            rightButtons: [{id: "create", title: "Create"}, {id: "scan", title: "Scan"}]
         });
 
         this.props.navigator.setOnNavigatorEvent(event => {
-            if (event.id === "add") {
+            if (event.id === "create") {
                 this.createAccount();
+            } else if (event.id === "scan") {
+                this.scanAccount();
             }
         });
     }
@@ -71,6 +73,10 @@ class AccountsController extends Component {
             .catch((error)=> {
                 alert(error)
             })
+    }
+
+    scanAccount() {
+        Navigation.showModal("QRScanController");
     }
 
     render() {
