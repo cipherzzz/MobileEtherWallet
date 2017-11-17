@@ -5,6 +5,7 @@ import safeCrypto from 'react-native-safe-crypto'
 import Immutable from 'immutable';
 import EthJs from 'ethereumjs-wallet-react-native'
 import {getBalanceRequest, getTransactionsRequest} from "../util/API"
+import Constants from "../util/Constants";
 
 window.randomBytes = asyncRandomBytes
 window.scryptsy = safeCrypto.scrypt
@@ -18,11 +19,11 @@ const ACTION_ACCOUNT_SET_CURRENT_ACCOUNT = 'ACCOUNT_SET_CURRENT_ACCOUNT';
 
 const InitialState = Immutable.fromJS({
     list: {
-        "0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae": {
-            name: "Etherscan Example",
+        "0x6E1916C1315b1600232523cF58c726A2F224cCE9": {
+            name: "MEW",
             privateKey: "privatekey",
             publicKey: "publickey",
-            address: "0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae",
+            address: Constants.MEW_ADDRESS,
             balance: "0",
             transactions: []
         }
@@ -54,9 +55,9 @@ export function createAccount(name) {
 export function fetchTransactions(account) {
     return (dispatch, getState) => {
         return new Promise((resolve, reject) => {
-            const dummyAddress = "0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae"; //Todo replace
+            //const dummyAddress = "0x6E1916C1315b1600232523cF58c726A2F224cCE9"; //Todo replace
             const address = account.get("address");
-            fetch(getTransactionsRequest(dummyAddress))
+            fetch(getTransactionsRequest(Constants.MEW_ADDRESS))
                 .then((response)=>{
                     response.json()
                         .then((data)=>{
@@ -74,9 +75,8 @@ export function fetchTransactions(account) {
 export function fetchBalance(account) {
     return (dispatch, getState) => {
         return new Promise((resolve, reject) => {
-            const dummyAddress = "0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae"; //Todo replace
             const address = account.get("address");
-            fetch(getBalanceRequest(dummyAddress))
+            fetch(getBalanceRequest(Constants.MEW_ADDRESS))
                 .then((response)=>{
                     response.json()
                             .then((data)=>{

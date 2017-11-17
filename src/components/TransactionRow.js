@@ -4,6 +4,7 @@ import React, { Component, PropTypes } from 'react'
 import { TouchableHighlight, StyleSheet, View, Text } from 'react-native'
 import AppStyles from '../util/Styles'
 import Colors from '../util/Colors';
+import Constants from '../util/Constants';
 import moment from 'moment'
 import Ionicon from "react-native-vector-icons/Ionicons";
 
@@ -21,9 +22,9 @@ class TransactionRow extends Component {
         const timeStamp = this.props.transaction.get("timeStamp");
         const date = moment(Number(timeStamp)).format("MMM Do YYYY, h:mm:ss a");
         const amount = this.props.transaction.get("value");
-        const address = this.props.account.get("address");
-        const to = this.props.transaction.get("to");
-        const from = this.props.transaction.get("from");
+        const address = this.props.account.get("address").toLowerCase();
+        const to = this.props.transaction.get("to").toLowerCase();
+        const from = this.props.transaction.get("from").toLowerCase();
         console.log("to: "+ to);
         console.log("from: "+ from);
         console.log("address: "+ address);
@@ -40,7 +41,7 @@ class TransactionRow extends Component {
                     <Text style={styles.date} numberOfLines={1}>{date}</Text>
                 </View>
                 <View style={styles.amountGroup}>
-                    <Text style={styles.balance} numberOfLines={1}>{amount + " ETH"}</Text>
+                    <Text style={styles.balance} numberOfLines={1}>{Number(amount)*Constants.ETH_CONVERSION + " ETH"}</Text>
                 </View>
                 <View style={{flexDirection: "row", alignItems: "center"}}>
                 <Ionicon name={"ios-arrow-dropright-outline"} size={24} color={Colors.Green}/>

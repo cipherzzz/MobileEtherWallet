@@ -9,7 +9,7 @@ import Immutable from 'immutable'
 import EthJs from 'ethereumjs-wallet-react-native'
 
 
-import {selectAccount, createAccount} from '../reducers/accounts'
+import {selectAccount, createAccount, fetchBalance} from '../reducers/accounts'
 
 import { connect } from "react-redux";
 
@@ -53,6 +53,14 @@ class AccountsController extends Component {
         })
     }
 
+    componentDidMount(){
+        if(this.props.accounts) {
+            this.props.accounts.forEach((account)=>{
+                this.props.dispatch(fetchBalance(account));
+            })
+        }
+    }
+
     createAccount() {
         this.props.dispatch(createAccount())
             .then((account)=> {
@@ -90,13 +98,14 @@ class AccountsController extends Component {
                         style={[AppStyles.listView]}
                         enableEmptySections={true}
                         dataSource={this.state.dataSource}
-                        renderSeparator={()=>{return <View style={{height: 1}}/>}}
-                        renderSectionHeader={()=>{return <Text style={AppStyles.header}>Accounts</Text>}}
+                        renderSeparator={()=>{return <View key={"separator"} style={{height: 1}}/>}}
+                        renderSectionHeader={()=>{return <Text key={"header"} style={AppStyles.header}>Accounts</Text>}}
                         renderRow={(rowData, sectionID: number, rowID: number, highlightRow) => {
                 return (
                     <AccountListRow
                         name={rowData.get("name") ? rowData.get("name") : 'no name'}
                         address={rowData.get("address")}
+                        key={rowData.get("address")}
                         balance={rowData.get("balance")}
                         onPress= {
                             () => {

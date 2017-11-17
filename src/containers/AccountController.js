@@ -6,6 +6,7 @@ import AppStyles from '../util/Styles'
 import QrView from '../components/QRView'
 import Blockies from 'react-native-blockies';
 import Colors from '../util/Colors';
+import Constants from '../util/Constants';
 import Ionicon from "react-native-vector-icons/Ionicons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Clipboard from "react-native-clipboard";
@@ -57,7 +58,6 @@ class AccountController extends Component {
 
     componentDidMount(){
         this.props.dispatch(fetchTransactions(this.props.account));
-        this.props.dispatch(fetchBalance(this.props.account));
     }
 
     componentWillReceiveProps(newProps) {
@@ -76,13 +76,14 @@ class AccountController extends Component {
                     style={[{flex: 1, margin: 5}]}
                     enableEmptySections={true}
                     dataSource={this.state.dataSource}
-                    renderSeparator={()=>{return <View style={{height: 1}} /> }}
-                    renderSectionHeader={()=>{return <Text style={AppStyles.header}>Transactions</Text>}}
+                    renderSeparator={()=>{return <View key={"separator"} style={{height: 1}} /> }}
+                    renderSectionHeader={()=>{return <Text key={"header"} style={AppStyles.header}>Transactions</Text>}}
                     renderRow={(rowData, sectionID: number, rowID: number, highlightRow) => {
                 return (
                     <TransactionRow
                         account={this.props.account}
                         transaction={rowData}
+                        key={rowData.get("hash")+"_"+rowData.get("timeStamp")}
                         onPress= {
                             () => {
                                 highlightRow(sectionID, rowID);
@@ -101,7 +102,7 @@ class AccountController extends Component {
         return (
             <ScrollView style={{flex: 1}}>
                 <Text style={{color: Colors.BlackAlmost, margin: 5, fontSize: 15}}>Info</Text>
-                <View style={[styles.wrapper, {backgroundColor: Colors.White, padding: 5}]}>
+                <View style={[styles.wrapper, {backgroundColor: Colors.White, padding: 10}]}>
                     <View>
                         <View style={{flexDirection: "row", alignItems: "center", flex: 6}}>
                             <Blockies
@@ -109,23 +110,13 @@ class AccountController extends Component {
                                 size={50} // blocky icon size
                                 style={{width:50, height:50, backgroundColor: Colors.Grey10, flex: 1}} // style of the view will wrap the icon
                             />
-                            <View style={{marginLeft: 10, flex: 5}}>
-                                <Text style={styles.name}>Name</Text>
-                                <TextInput
-                                    style={styles.nameInput}
-                                    value={this.props.account.get("name")}
-                                    placeholder={"Account Name"}
-                                    autoFocus
-                                    onChangeText={(value)=>{this.props.dispatch(setAccountName(this.props.account, value))}}
-                                />
-                            </View>
                         </View>
                     </View>
                     <View style={{flexDirection: "row", alignItems: "center", flex: 6, marginTop: 10}}>
                         <View style={{flex: 5}}>
                             <Text style={styles.balance}>Balance</Text>
                             <Text
-                                style={{color: Colors.BlackAlmost}}>{this.props.account.get("balance") + " ETH"}</Text>
+                                style={{color: Colors.BlackAlmost}}>{Number(this.props.account.get("balance"))*Constants.ETH_CONVERSION + " ETH"}</Text>
                         </View>
                         <TouchableOpacity onPress={()=>
                     {
@@ -178,13 +169,15 @@ const styles = StyleSheet.create({
         flex: 1
     },
     name: {
-        fontSize: 16,
-        color: Colors.Grey50,
+        fontSize: 18,
+        color: Colors.BlackAlmost,
         marginBottom: 5
     },
     nameInput: {
         fontSize: 16,
-        color: Colors.BlackAlmost
+        color: Colors.BlackAlmost,
+        backgroundColor: Colors.Red,
+        width: 100
     },
     address: {
         color: Colors.Grey50,
