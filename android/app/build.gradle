@@ -94,13 +94,13 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    compileSdkVersion 24
+    buildToolsVersion "24.0.3"
 
     defaultConfig {
         applicationId "com.mobileetherwallet"
         minSdkVersion 16
-        targetSdkVersion 22
+        targetSdkVersion 24
         versionCode 1
         versionName "1.0"
         ndk {
@@ -139,16 +139,13 @@ android {
 dependencies {
     compile project(':react-native-udp')
     compile project(':react-native-tcp')
-    compile project(':react-native-randombytes')
     compile project(':react-native-os')
-    compile project(':react-native-secure-randombytes')
-    compile project(':react-native-safe-crypto')
     compile project(':react-native-vector-icons')
     compile project(':react-native-navigation')
     compile project(':react-native-secure-storage')
     compile project(':react-native-camera')
     compile fileTree(dir: "libs", include: ["*.jar"])
-    compile "com.android.support:appcompat-v7:23.0.1"
+    compile "com.android.support:appcompat-v7:24.0.3"
     compile "com.facebook.react:react-native:+"  // From node_modules
 }
 

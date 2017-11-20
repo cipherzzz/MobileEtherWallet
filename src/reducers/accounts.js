@@ -1,14 +1,8 @@
 
 import {network} from "../util/Constants";
-import { asyncRandomBytes } from 'react-native-secure-randombytes'
-import safeCrypto from 'react-native-safe-crypto'
 import Immutable from 'immutable';
-import EthJs from 'ethereumjs-wallet-react-native'
 import {getBalanceRequest, getTransactionsRequest} from "../util/API"
 import Constants from "../util/Constants";
-
-window.randomBytes = asyncRandomBytes
-window.scryptsy = safeCrypto.scrypt
 
 const ACTION_ACCOUNT_SET_ACCOUNT = 'ACCOUNT_SET_ACCOUNT';
 const ACTION_ACCOUNT_SET_TRANSACTIONS = 'ACCOUNT_SET_TRANSACTIONS';
@@ -30,27 +24,6 @@ const InitialState = Immutable.fromJS({
     },
     currentAccountId: ""
     });
-
-// actions
-export function createAccount(name) {
-    return (dispatch, getState) => {
-        return new Promise((resolve, reject) => {
-                EthJs.generate()
-                    .then((response)=>{
-                        var account = {};
-                        account.name = name;
-                        account.privateKey = response.getPrivateKeyString();
-                        account.publicKey = response.getPublicKeyString();
-                        account.address = response.getAddressString();
-                        account.balance = 0.0000000000;
-                        account.transactions = [];
-                        dispatch(setAccount(Immutable.fromJS(account)));
-                        return resolve(account)
-                    })
-                    .catch((error)=>{return reject(error)});
-    })
-    };
-}
 
 export function importAccount(data) {
     return (dispatch, getState) => {
@@ -113,7 +86,7 @@ export function fetchBalance(account) {
                                 return resolve(balance)
                             })
                             .catch((error)=>{
-                                console.log("***"+error)
+                                alert("***"+error)
                                 return reject(error)
                             });
                 })

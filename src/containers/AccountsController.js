@@ -6,7 +6,6 @@ import AccountListRow from '../components/AccountListRow'
 import AppStyles from '../util/Styles'
 import Navigation from '../Navigation'
 import Immutable from 'immutable'
-import EthJs from 'ethereumjs-wallet-react-native'
 
 
 import {selectAccount, createAccount, fetchBalance} from '../reducers/accounts'

@@ -5,7 +5,7 @@ import { configureStore } from "./Store";
 import { registerScreens } from "./Screens";
 import Navigation from "./Navigation";
 import {loadIcons} from "./util/Icons"
-import '../shim'
+//import '../shim'
 
 
 // --------------------------------------
