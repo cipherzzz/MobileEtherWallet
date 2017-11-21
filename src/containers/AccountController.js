@@ -48,8 +48,8 @@ class AccountController extends Component {
         this.props.navigator.setOnNavigatorEvent(event => {
             if (event.id === "delete") {
                 //Had some timing issues with required props - Clean this up
-                Navigation.pop(this.props.navigator);
                 props.dispatch(deleteAccount(props.account.get("address")));
+                Navigation.pop(this.props.navigator);
             }
         });
 
@@ -187,6 +187,11 @@ const styles = StyleSheet.create({
         color: Colors.Grey50,
         fontSize: 14
     },
+    introText: {
+        textAlign: 'center',
+        fontSize: 16,
+        marginTop: 60,
+    }
 })
 
 export default connect(mapStateToProps)(AccountController);

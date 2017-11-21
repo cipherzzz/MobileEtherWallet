@@ -8,15 +8,21 @@ import Navigation from '../Navigation'
 import Immutable from 'immutable'
 
 
-import {selectAccount, fetchBalance} from '../reducers/accounts'
+import {selectAccount, fetchBalance, populateAccounts} from '../reducers/accounts'
 
 import { connect } from "react-redux";
 
 // state map
 function mapStateToProps(state) {
 
+    let accounts = state.accounts.get("list");
+    let list = [];
+    if(accounts) {
+        list = accounts.valueSeq().toArray();
+    }
+
     return {
-        accounts: state.accounts.get("list").valueSeq().toArray(),
+        accounts: list,
     };
 }
 
@@ -53,11 +59,7 @@ class AccountsController extends Component {
     }
 
     componentDidMount(){
-        if(this.props.accounts) {
-            this.props.accounts.forEach((account)=>{
-                this.props.dispatch(fetchBalance(account));
-            })
-        }
+        this.props.dispatch(populateAccounts());
     }
 
     createAccount() {
