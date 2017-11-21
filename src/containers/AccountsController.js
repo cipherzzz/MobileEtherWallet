@@ -8,7 +8,7 @@ import Navigation from '../Navigation'
 import Immutable from 'immutable'
 
 
-import {selectAccount, createAccount, fetchBalance} from '../reducers/accounts'
+import {selectAccount, fetchBalance} from '../reducers/accounts'
 
 import { connect } from "react-redux";
 
@@ -35,13 +35,11 @@ class AccountsController extends Component {
         }
 
         this.props.navigator.setButtons({
-            rightButtons: [{id: "create", title: "Create"}, {id: "scan", title: "Scan"}]
+            rightButtons: [{id: "scan", title: "Scan"}]
         });
 
         this.props.navigator.setOnNavigatorEvent(event => {
-            if (event.id === "create") {
-                this.createAccount();
-            } else if (event.id === "scan") {
+            if (event.id === "scan") {
                 this.scanAccount();
             }
         });

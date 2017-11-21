@@ -51,18 +51,9 @@ class QRScanController extends Component {
         }
 
         return (
-            <View>
-            <TouchableOpacity onPress={()=>{
-            this.props.dispatch(importAccount({address: "0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae"}))
-                    .then((balance)=>{ Navigation.dismissModal() })
-                    .catch((error)=>{Navigation.showNotification("Unable to Import Scanned Address", "error")});
-            }}>
-                <Text style={{width: 100, height:40, backgroundColor:"blue"}}>Scan</Text>
-            </TouchableOpacity>
-            <Camera onBarCodeRead={(scan)=>{this.props.dispatch(scan.data)}} style={AppStyles.view}>
+            <Camera onBarCodeRead={(scan)=>{this.props.dispatch(importAccount(scan.data))}} style={AppStyles.view}>
                 { this.renderRects() }
             </Camera>
-            </View>
         )
     }
 

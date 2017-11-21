@@ -32,7 +32,7 @@ export function importAccount(data) {
         account.name = "";
         account.privateKey = "";
         account.publicKey = "";
-        account.address = data.address;
+        account.address = data;
         account.balance = 0.0000000000;
         account.transactions = [];
 
