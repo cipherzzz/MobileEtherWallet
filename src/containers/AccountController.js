@@ -14,7 +14,7 @@ import Navigation from "../Navigation";
 import TransactionRow from "../components/TransactionRow";
 
 import { connect } from "react-redux";
-import {setAccountName, deleteAccount, fetchTransactions, fetchBalance} from '../reducers/accounts';
+import {setAccountName, deleteAccount, fetchTransactions, fetchBalance, saveAccounts} from '../reducers/accounts';
 
 // state map
 function mapStateToProps(state) {
@@ -48,8 +48,8 @@ class AccountController extends Component {
         this.props.navigator.setOnNavigatorEvent(event => {
             if (event.id === "delete") {
                 //Had some timing issues with required props - Clean this up
-                props.dispatch(deleteAccount(props.account.get("address")));
                 Navigation.pop(this.props.navigator);
+                this.props.dispatch(deleteAccount(this.props.account.get("address")))
             }
         });
 
@@ -76,7 +76,7 @@ class AccountController extends Component {
                     style={[{flex: 1, margin: 5}]}
                     enableEmptySections={true}
                     dataSource={this.state.dataSource}
-                    renderSeparator={()=>{return <View key={"separator"} style={{height: 1}} /> }}
+                    renderSeparator={(sectionId, rowId, adjacentRowHighlighted)=>{return <View key={`sep:${sectionId}:${rowId}`} style={{height: 1}}/>}}
                     renderSectionHeader={()=>{return <Text key={"header"} style={AppStyles.header}>Transactions</Text>}}
                     renderRow={(rowData, sectionID: number, rowID: number, highlightRow) => {
                 return (

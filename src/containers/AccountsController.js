@@ -103,7 +103,7 @@ class AccountsController extends Component {
                         style={[AppStyles.listView]}
                         enableEmptySections={true}
                         dataSource={this.state.dataSource}
-                        renderSeparator={()=>{return <View key={"separator"} style={{height: 1}}/>}}
+                        renderSeparator={(sectionId, rowId, adjacentRowHighlighted)=>{return <View key={`sep:${sectionId}:${rowId}`} style={{height: 1}}/>}}
                         renderSectionHeader={()=>{return <Text key={"header"} style={AppStyles.header}>Accounts</Text>}}
                         renderRow={(rowData, sectionID: number, rowID: number, highlightRow) => {
                 return (

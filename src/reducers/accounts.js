@@ -61,10 +61,6 @@ export function importAccount(data) {
                     //todo - a little dirty
                     account.balance = balance;
                     dispatch(setAccount(Immutable.fromJS(account)));
-
-                    //persist this
-                    setAccounts(getState().accounts.get("list"));
-
                     return resolve(account)
                 })
                 .catch((error)=>{
@@ -177,17 +173,19 @@ export function selectAccount(accountId) {
 export function deleteAccount(accountId) {
 
     return (dispatch, getState) => {
-
         return new Promise((resolve, reject) => {
             dispatch(removeAccount(accountId));
-
-            console.log("HERe******"+JSON.stringify(getState().accounts.get("list")));
-
-            //persist this
-            setAccounts(getState().accounts.get("list"));
-
-            return resolve();
+            return resolve(accountId);
         });
+    };
+}
+
+export function saveAccounts() {
+
+    return (dispatch, getState) => {
+        //persist this
+        console.log("*****"+JSON.stringify(getState().accounts.get("list")));
+        setAccounts(getState().accounts.get("list"));
     };
 }
 
@@ -210,13 +208,17 @@ export default function reducer(state = InitialState, action) {
     switch (action.type) {
 
         case ACTION_ACCOUNT_SET_ACCOUNT:
-            return state.setIn(['list', action.account.get("address")], action.account);
+            let addedState = state.setIn(['list', action.account.get("address")], action.account);
+            setAccounts(addedState.get('list'));
+            return addedState;
 
         case ACTION_ACCOUNT_SET_TRANSACTIONS:
             return state.setIn(['list', action.account.get("address"), "transactions"], action.transactions);
 
         case ACTION_ACCOUNT_REMOVE_ACCOUNT:
-            return state.deleteIn(['list', action.accountId]);
+            let deletedState = state.deleteIn(['list', action.accountId]);
+            setAccounts(deletedState.get('list'));
+            return deletedState;
 
         case ACTION_ACCOUNT_SET_ACCOUNT_NAME:
             return state.setIn(['list', action.accountId, "name"], action.name);
