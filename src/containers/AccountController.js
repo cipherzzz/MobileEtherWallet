@@ -11,7 +11,6 @@ import {
   ListView,
 } from 'react-native';
 const ScrollableTabView = require('react-native-scrollable-tab-view');
-import AppStyles from '../util/Styles';
 import QrView from '../components/QRView';
 import Blockies from 'react-native-blockies';
 import Colors from '../util/Colors';
@@ -29,6 +28,7 @@ import {
   setAccountName,
   deleteAccount,
   fetchTransactions,
+  fetchTokens,
   fetchAccountInfo,
   saveAccounts,
 } from '../reducers/accounts';
@@ -42,7 +42,10 @@ function mapStateToProps(state) {
 
   return {
     account: account,
-    transactions: account.get('transactions').toArray(),
+    transactions: account.get('transactions')
+      ? account.get('transactions').toArray()
+      : [],
+    tokens: account.get('tokens') ? account.get('tokens').toArray() : [],
   };
 }
 
@@ -66,6 +69,11 @@ class AccountController extends Component {
         this.props.dispatch(deleteAccount(this.props.account.get('address')));
       }
     });
+  }
+
+  componentDidMount() {
+    this.props.dispatch(fetchTokens(this.props.account));
+    this.props.dispatch(fetchTransactions(this.props.account));
   }
 
   getTokens() {
@@ -116,10 +124,44 @@ class AccountController extends Component {
                   style={{
                     width: 50,
                     height: 50,
-                    backgroundColor: Colors.Grey10,
+                    backgroundColor: Colors.White,
                     flex: 1,
                   }} // style of the view will wrap the icon
                 />
+              </View>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                flex: 6,
+                marginTop: 10,
+              }}
+            >
+              <View style={{ flex: 5 }}>
+                <Text style={styles.balance}>Balance</Text>
+                <Text style={{ color: Colors.BlackAlmost }}>
+                  {this.props.account.getIn(['info', 'ETH', 'balance']) +
+                    ' ETH'}
+                </Text>
+                {this.getTokens()}
+              </View>
+              <View>
+                <TouchableOpacity
+                  onPress={() => {
+                    Clipboard.set(this.props.account.get('address'));
+                    Navigation.showNotification(
+                      'Address Copied to Clipboard',
+                      'success',
+                    );
+                  }}
+                >
+                  <Ionicon
+                    name={'ios-copy-outline'}
+                    size={40}
+                    color={Colors.Green}
+                  />
+                </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
                     Navigation.showModal('QRView', {
@@ -141,49 +183,25 @@ class AccountController extends Component {
               }}
             >
               <View style={{ flex: 5 }}>
-                <Text style={styles.balance}>Balance</Text>
-                <Text style={{ color: Colors.BlackAlmost }}>
-                  {this.props.account.getIn(['info', 'ETH', 'balance']) +
-                    ' ETH'}
-                </Text>
-                {this.getTokens()}
-              </View>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                flex: 6,
-                marginTop: 10,
-              }}
-            >
-              <View style={{ flex: 5 }}>
                 <Text style={styles.address}>Address</Text>
                 <Text style={{ color: Colors.BlackAlmost }}>
                   {this.props.account.get('address')}
                 </Text>
               </View>
-              <TouchableOpacity
-                onPress={() => {
-                  Clipboard.set(this.props.account.get('address'));
-                  Navigation.showNotification(
-                    'Address Copied to Clipboard',
-                    'success',
-                  );
-                }}
-              >
-                <Ionicon
-                  name={'ios-copy-outline'}
-                  size={40}
-                  color={Colors.Green}
-                />
-              </TouchableOpacity>
             </View>
           </View>
         </View>
         <ScrollableTabView style={{ flex: 3, margin: 10 }}>
-          <TransactionsController tabLabel="Transactions" />
-          <TokensController tabLabel="Tokens" />
+          <TransactionsController
+            tabLabel="Transactions"
+            transactions={this.props.transactions}
+            account={this.props.account}
+          />
+          <TokensController
+            tabLabel="Tokens"
+            tokens={this.props.tokens}
+            account={this.props.account}
+          />
         </ScrollableTabView>
       </ScrollView>
     );

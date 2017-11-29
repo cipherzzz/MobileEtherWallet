@@ -3,6 +3,7 @@ package com.mobileetherwallet;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.tradle.react.UdpSocketsModule;
 import com.peel.react.TcpSocketsModule;
 import com.peel.react.rnos.RNOSModule;
@@ -36,6 +37,7 @@ public class MainApplication extends NavigationApplication implements ReactAppli
       public List<ReactPackage> createAdditionalReactPackages() {
         return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
+            new RNDeviceInfo(),
               new UdpSocketsModule(),
               new TcpSocketsModule(),
               new RNOSModule(),

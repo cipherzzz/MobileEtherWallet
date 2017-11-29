@@ -4192,6 +4192,10 @@ react-native-crypto@^2.1.1:
     pbkdf2 "3.0.8"
     public-encrypt "^4.0.0"
 
+react-native-device-info@^0.13.0:
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-0.13.0.tgz#81051eebd3db6959e4f1d2cb0ae8df74105040cf"
+
 "react-native-http@github:tradle/react-native-http#834492d":
   version "1.0.0"
   resolved "https://codeload.github.com/tradle/react-native-http/tar.gz/834492dbc792b1dec8ec8f0a1c9671f640339f01"

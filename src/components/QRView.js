@@ -3,7 +3,6 @@
 import React, { Component, PropTypes } from 'react';
 import { View, StyleSheet } from 'react-native';
 import QRCode from 'react-native-qrcode';
-import AppStyles from '../util/Styles';
 import Navigation from '../Navigation';
 
 export default class QrView extends Component {
@@ -32,7 +31,7 @@ export default class QrView extends Component {
 
   render() {
     if (this.props.screen) {
-      return <View style={AppStyles.view}>{this.renderQr()}</View>;
+      return <View style={styles.view}>{this.renderQr()}</View>;
     }
 
     return this.renderQr();
@@ -58,5 +57,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'transparent',
+  },
+  view: {
+    flex: 1,
+    padding: 20,
   },
 });

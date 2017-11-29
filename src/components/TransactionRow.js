@@ -2,7 +2,6 @@
 
 import React, { Component, PropTypes } from 'react';
 import { TouchableHighlight, StyleSheet, View, Text } from 'react-native';
-import AppStyles from '../util/Styles';
 import Colors from '../util/Colors';
 import Constants from '../util/Constants';
 import moment from 'moment';

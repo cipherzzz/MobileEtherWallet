@@ -9,10 +9,12 @@ import {
   Text,
 } from 'react-native';
 import Camera from 'react-native-camera';
-import AppStyles from '../util/Styles';
 import Navigation from '../Navigation';
 import { importAccount } from '../reducers/accounts';
 import Constants from '../util/Constants';
+import Colors from '../util/Colors';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import DeviceInfo from 'react-native-device-info';
 
 import { connect } from 'react-redux';
 
@@ -43,11 +45,42 @@ class QRScanController extends Component {
     });
   }
 
+  showButtonForSimulator() {
+    if (DeviceInfo.isEmulator()) {
+      return (
+        <View>
+          <View style={{ height: 20 }} />
+          <Icon.Button
+            name="camera"
+            backgroundColor={Colors.Green}
+            onPress={() => {
+              this.props
+                .dispatch(
+                  importAccount('0x6E1916C1315b1600232523cF58c726A2F224cCE9'),
+                )
+                .then(balance => {
+                  Navigation.dismissModal();
+                })
+                .catch(error => {
+                  Navigation.showNotification(
+                    'Unable to Import Scanned Address',
+                    'error',
+                  );
+                });
+            }}
+          >
+            0x6E1916C1315b1600232523cF58c726A2F224cCE9
+          </Icon.Button>
+        </View>
+      );
+    } else {
+      return null;
+    }
+  }
+
   render() {
     if (false) {
-      return (
-        <View style={[AppStyles.view, styles.view]}>{this.renderRects()}</View>
-      );
+      return <View style={[styles.view]}>{this.renderRects()}</View>;
     }
 
     return (
@@ -55,91 +88,10 @@ class QRScanController extends Component {
         onBarCodeRead={scan => {
           this.props.dispatch(importAccount(scan.data));
         }}
-        style={AppStyles.view}
+        style={styles.view}
       >
-        <TouchableOpacity
-          onPress={() => {
-            this.props
-              .dispatch(
-                importAccount('0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae'),
-              )
-              .then(balance => {
-                Navigation.dismissModal();
-              })
-              .catch(error => {
-                Navigation.showNotification(
-                  'Unable to Import Scanned Address',
-                  'error',
-                );
-              });
-          }}
-        >
-          <Text style={{ width: 100, height: 40, backgroundColor: 'blue' }}>
-            Scan
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            this.props
-              .dispatch(
-                importAccount('0x0D6e00a6aFd70F94e45Ae4fC6639ee35E2944b86'),
-              )
-              .then(balance => {
-                Navigation.dismissModal();
-              })
-              .catch(error => {
-                Navigation.showNotification(
-                  'Unable to Import Scanned Address',
-                  'error',
-                );
-              });
-          }}
-        >
-          <Text style={{ width: 100, height: 40, backgroundColor: 'blue' }}>
-            Scan
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            this.props
-              .dispatch(
-                importAccount('0x6E1916C1315b1600232523cF58c726A2F224cCE9'),
-              )
-              .then(balance => {
-                Navigation.dismissModal();
-              })
-              .catch(error => {
-                Navigation.showNotification(
-                  'Unable to Import Scanned Address',
-                  'error',
-                );
-              });
-          }}
-        >
-          <Text style={{ width: 100, height: 40, backgroundColor: 'blue' }}>
-            Scan
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            this.props
-              .dispatch(importAccount(Constants.LEDGER_ADDRESS))
-              .then(balance => {
-                Navigation.dismissModal();
-              })
-              .catch(error => {
-                Navigation.showNotification(
-                  'Unable to Import Scanned Address',
-                  'error',
-                );
-              });
-          }}
-        >
-          <Text style={{ width: 100, height: 40, backgroundColor: 'blue' }}>
-            Scan
-          </Text>
-        </TouchableOpacity>
         {this.renderRects()}
+        {this.showButtonForSimulator()}
       </Camera>
     );
   }
@@ -158,6 +110,8 @@ class QRScanController extends Component {
 const styles = StyleSheet.create({
   view: {
     backgroundColor: 'black',
+    flex: 1,
+    padding: 20,
   },
 
   rectangleContainer: {

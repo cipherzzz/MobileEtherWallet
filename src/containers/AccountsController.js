@@ -12,16 +12,15 @@ import {
   TextInput,
 } from 'react-native';
 import AccountListRow from '../components/AccountListRow';
-import AppStyles from '../util/Styles';
 import Navigation from '../Navigation';
 import Immutable from 'immutable';
 import Constants from '../util/Constants';
+import Colors from '../util/Colors';
 
 import {
   selectAccount,
   fetchAccountInfo,
   populateAccounts,
-  fetchTransactions,
 } from '../reducers/accounts';
 
 import { connect } from 'react-redux';
@@ -107,17 +106,17 @@ class AccountsController extends Component {
       return (
         <ScrollView>
           <ListView
-            style={[AppStyles.listView]}
+            style={[styles.listView]}
             enableEmptySections={true}
             dataSource={this.state.dataSource}
-            renderSeparator={(sectionId, rowId, adjacentRowHighlighted) => {
+            renderSeparator={(sectionId, rowId) => {
               return (
                 <View key={`sep:${sectionId}:${rowId}`} style={{ height: 1 }} />
               );
             }}
             renderSectionHeader={() => {
               return (
-                <Text key={'header'} style={AppStyles.header}>
+                <Text key={'header'} style={styles.header}>
                   Accounts
                 </Text>
               );
@@ -165,6 +164,17 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 16,
     marginTop: 60,
+  },
+  listView: {
+    flex: 1,
+  },
+  header: {
+    fontSize: 14,
+    color: Colors.BlackAlmost,
+    fontWeight: 'bold',
+    marginTop: 10,
+    marginBottom: 5,
+    marginLeft: 5,
   },
 });
 

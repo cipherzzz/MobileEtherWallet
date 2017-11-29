@@ -30,6 +30,7 @@
     "react-native-camera": "^0.5.1",
     "react-native-clipboard": "^0.0.5",
     "react-native-crypto": "^2.1.1",
+    "react-native-device-info": "^0.13.0",
     "react-native-http": "github:tradle/react-native-http#834492d",
     "react-native-level-fs": "^3.0.0",
     "react-native-navigation": "^1.1.134",

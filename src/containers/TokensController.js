@@ -10,7 +10,6 @@ import {
   TouchableOpacity,
   ListView,
 } from 'react-native';
-import AppStyles from '../util/Styles';
 import Colors from '../util/Colors';
 import Constants from '../util/Constants';
 import Ionicon from 'react-native-vector-icons/Ionicons';
@@ -18,23 +17,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Navigation from '../Navigation';
 import TransactionRow from '../components/TransactionRow';
 
-import { connect } from 'react-redux';
-import { fetchTokens } from '../reducers/accounts';
-
-// state map
-function mapStateToProps(state) {
-  let account = state.accounts.getIn([
-    'list',
-    state.accounts.get('currentAccountId'),
-  ]);
-
-  return {
-    account: account,
-    tokens: account.get('tokens') ? account.get('tokens').toArray() : [],
-  };
-}
-
-class TokensController extends Component {
+export default class TokensController extends Component {
   static propTypes = {
     account: PropTypes.object.isRequired,
     tokens: PropTypes.any.isRequired,
@@ -49,10 +32,6 @@ class TokensController extends Component {
     this.state = {
       dataSource: ds.cloneWithRows(props.tokens),
     };
-  }
-
-  componentDidMount() {
-    this.props.dispatch(fetchTokens(this.props.account));
   }
 
   componentWillReceiveProps(newProps) {
@@ -80,7 +59,7 @@ class TokensController extends Component {
           }}
           renderSectionHeader={() => {
             return (
-              <Text key={'header'} style={AppStyles.header}>
+              <Text key={'header'} style={styles.header}>
                 Tokens
               </Text>
             );
@@ -168,6 +147,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginTop: 60,
   },
+  header: {
+    fontSize: 14,
+    color: Colors.BlackAlmost,
+    fontWeight: 'bold',
+    marginTop: 10,
+    marginBottom: 5,
+    marginLeft: 5,
+  },
 });
-
-export default connect(mapStateToProps)(TokensController);

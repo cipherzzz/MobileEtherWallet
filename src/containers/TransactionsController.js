@@ -10,7 +10,6 @@ import {
   TouchableOpacity,
   ListView,
 } from 'react-native';
-import AppStyles from '../util/Styles';
 import Colors from '../util/Colors';
 import Constants from '../util/Constants';
 import Ionicon from 'react-native-vector-icons/Ionicons';
@@ -18,23 +17,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Navigation from '../Navigation';
 import TransactionRow from '../components/TransactionRow';
 
-import { connect } from 'react-redux';
-import { fetchTransactions } from '../reducers/accounts';
-
-// state map
-function mapStateToProps(state) {
-  let account = state.accounts.getIn([
-    'list',
-    state.accounts.get('currentAccountId'),
-  ]);
-
-  return {
-    account: account,
-    transactions: account.get('transactions').toArray(),
-  };
-}
-
-class TransactionsController extends Component {
+export default class TransactionsController extends Component {
   static propTypes = {
     account: PropTypes.object.isRequired,
     transactions: PropTypes.any.isRequired,
@@ -49,10 +32,6 @@ class TransactionsController extends Component {
     this.state = {
       dataSource: ds.cloneWithRows(props.transactions),
     };
-  }
-
-  componentDidMount() {
-    this.props.dispatch(fetchTransactions(this.props.account));
   }
 
   componentWillReceiveProps(newProps) {
@@ -80,7 +59,7 @@ class TransactionsController extends Component {
           }}
           renderSectionHeader={() => {
             return (
-              <Text key={'header'} style={AppStyles.header}>
+              <Text key={'header'} style={styles.header}>
                 Transactions
               </Text>
             );
@@ -164,6 +143,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginTop: 60,
   },
+  header: {
+    fontSize: 14,
+    color: Colors.BlackAlmost,
+    fontWeight: 'bold',
+    marginTop: 10,
+    marginBottom: 5,
+    marginLeft: 5,
+  },
 });
-
-export default connect(mapStateToProps)(TransactionsController);

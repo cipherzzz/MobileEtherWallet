@@ -2,7 +2,6 @@
 
 import React, { Component, PropTypes } from 'react';
 import { TouchableHighlight, StyleSheet, View, Text } from 'react-native';
-import AppStyles from '../util/Styles';
 import Blockies from 'react-native-blockies';
 import Colors from '../util/Colors';
 import Constants from '../util/Constants';
@@ -67,7 +66,7 @@ class AccountListRow extends Component {
 
 const styles = StyleSheet.create({
   row: {
-    backgroundColor: '#F8F8F8',
+    backgroundColor: Colors.White,
     padding: 5,
   },
   innerRow: {
