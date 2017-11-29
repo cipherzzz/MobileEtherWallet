@@ -1,18 +1,17 @@
-import React, { Component } from "react";
-import { StyleSheet, Text, View, ScrollView } from "react-native";
+import React, { Component } from 'react';
+import { StyleSheet, Text, View, ScrollView } from 'react-native';
 
-import { connect } from "react-redux";
+import { connect } from 'react-redux';
 
 // state map
 function mapStateToProps(state) {
-    return {
-    };
+  return {};
 }
 
 export class ReceiveController extends Component {
-    render() {
-        return <Text>Receive</Text>;
-    }
+  render() {
+    return <Text>Receive</Text>;
+  }
 }
 
 export default connect(mapStateToProps)(ReceiveController);

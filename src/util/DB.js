@@ -9,29 +9,35 @@
 import store from 'react-native-simple-store';
 
 export function getAccounts() {
-
-return new Promise((resolve, reject) => {
-    store.get('accounts')
-        .then((accounts) => {
-            if(accounts) {
-                return resolve(accounts)
-            } else {
-                store.save('accounts', {}).then(()=>{resolve({})})
-            }
-        })
-        .catch((error)=>{return reject(error)})
-});
+  return new Promise((resolve, reject) => {
+    store
+      .get('accounts')
+      .then(accounts => {
+        if (accounts) {
+          return resolve(accounts);
+        } else {
+          store.save('accounts', {}).then(() => {
+            resolve({});
+          });
+        }
+      })
+      .catch(error => {
+        return reject(error);
+      });
+  });
 }
 
 export function setAccounts(accounts) {
-
-    return new Promise((resolve, reject) => {
-        store.save('accounts', accounts)
-            .then((accounts) => {
-                return resolve(accounts);
-            })
-            .catch((error)=>{return reject(error)})
-    });
+  return new Promise((resolve, reject) => {
+    store
+      .save('accounts', accounts)
+      .then(accounts => {
+        return resolve(accounts);
+      })
+      .catch(error => {
+        return reject(error);
+      });
+  });
 }
 
 //export function setAccounts(accounts) {

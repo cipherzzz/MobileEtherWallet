@@ -1,14 +1,12 @@
-
 import React from 'react';
-import { Navigation } from "react-native-navigation";
+import { Navigation } from 'react-native-navigation';
 
-import AccountsController from "./containers/AccountsController";
-import ReceiveController from "./containers/ReceiveController";
-import AccountController from "./containers/AccountController";
-import QRView from "./components/QRView";
-import QRScanController from "./containers/QRScanController";
-import ViewNotification from "./components/ViewNotification";
-
+import AccountsController from './containers/AccountsController';
+import ReceiveController from './containers/ReceiveController';
+import AccountController from './containers/AccountController';
+import QRView from './components/QRView';
+import QRScanController from './containers/QRScanController';
+import ViewNotification from './components/ViewNotification';
 
 export const screensMap = {
   AccountsController,
@@ -16,14 +14,19 @@ export const screensMap = {
   AccountController,
   QRView,
   QRScanController,
-  ViewNotification
+  ViewNotification,
 };
 
 export function registerScreens(store, Provider) {
   for (let key in screensMap) {
     if (screensMap.hasOwnProperty(key)) {
       const ViewObject = screensMap[key];
-      Navigation.registerComponent(key.toString(), () => ViewObject, store, Provider);
+      Navigation.registerComponent(
+        key.toString(),
+        () => ViewObject,
+        store,
+        Provider,
+      );
     }
   }
 }

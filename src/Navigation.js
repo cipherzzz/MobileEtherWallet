@@ -1,8 +1,7 @@
-
-import { Platform } from "react-native";
-import { Navigation } from "react-native-navigation";
-import Icons from "./util/Icons";
-import Colors from "./util/Colors";
+import { Platform } from 'react-native';
+import { Navigation } from 'react-native-navigation';
+import Icons from './util/Icons';
+import Colors from './util/Colors';
 
 // ------------------------
 // INIT
@@ -12,16 +11,10 @@ function init() {
   Navigation.startTabBasedApp({
     tabs: [
       {
-        title: "Accounts",
-        label: "Accounts",
-        screen: "AccountsController",
+        title: 'Accounts',
+        label: 'Accounts',
+        screen: 'AccountsController',
         icon: Icons.accounts,
-      },
-      {
-        title: "Receive",
-        label: "Receive",
-        screen: "ReceiveController",
-        icon: Icons.receive
       },
     ],
     tabsStyle: {
@@ -31,14 +24,14 @@ function init() {
       tabBarBackgroundColor: Colors.WhiteAlmost,
     },
     passProps: {},
-    animationType: "slide-down",
+    animationType: 'slide-down',
     appStyle: {
-      orientation: "portrait",
+      orientation: 'portrait',
       navBarTextColor: Colors.Grey50, // change the text color of the title (remembered across pushes)
       navBarBackgroundColor: Colors.White,
       navBarButtonColor: Colors.Red,
-      screenBackgroundColor: Colors.Grey10
-    }
+      screenBackgroundColor: Colors.Grey10,
+    },
   });
 }
 
@@ -47,24 +40,24 @@ function init() {
 // ------------------------
 function push(navigator, screenId, props) {
   if (!navigator) {
-    throw "Missing navigator param for push";
+    throw 'Missing navigator param for push';
   }
   if (!screenId) {
-    throw "Missing screenId param for push";
+    throw 'Missing screenId param for push';
   }
 
   const screenNavigationProps = {};
 
   navigator.push({
     screen: screenId,
-      ...screenNavigationProps,
-      ...props
-});
+    ...screenNavigationProps,
+    ...props,
+  });
 }
 
 function pop(navigator) {
   if (!navigator) {
-    throw "Missing navigator param for pop";
+    throw 'Missing navigator param for pop';
   }
 
   navigator.pop({ animated: true });
@@ -72,7 +65,7 @@ function pop(navigator) {
 
 function popToRoot(navigator) {
   if (!navigator) {
-    throw "Missing navigator param for popToRoot";
+    throw 'Missing navigator param for popToRoot';
   }
 
   navigator.popToRoot();
@@ -83,23 +76,23 @@ function popToRoot(navigator) {
 // ------------------------
 function showModal(screenId, props) {
   if (!screenId) {
-    throw "Missing screenId param for showModal";
+    throw 'Missing screenId param for showModal';
   }
 
   const screenNavigationProps = {};
 
   Navigation.showModal({
     screen: screenId,
-    animationType: "slide-up",
-      ...screenNavigationProps,
-      ...props
-});
+    animationType: 'slide-up',
+    ...screenNavigationProps,
+    ...props,
+  });
 }
 
 function dismissModal() {
   // RETURNS A PROMISE
   return Navigation.dismissModal({
-    animationType: "slide-down"
+    animationType: 'slide-down',
   });
 }
 
@@ -110,53 +103,53 @@ function dismissAllModals() {
 // ------------------------
 // DIALOG
 // ------------------------
-function showDialog(screen = "Dialog", props = {}, callback) {
+function showDialog(screen = 'Dialog', props = {}, callback) {
   Navigation.showModal({
-        screen: screen,
-        navigatorStyle: {
-          navBarHidden: true,
-          screenBackgroundColor: "transparent",
-          modalPresentationStyle: "overCurrentContext",
+    screen: screen,
+    navigatorStyle: {
+      navBarHidden: true,
+      screenBackgroundColor: 'transparent',
+      modalPresentationStyle: 'overCurrentContext',
 
-          // optional props
-          orientation: props.orientation ? props.orientation : "portrait"
-        },
-        overrideBackPress: true,
-        animationType: "none",
-        passProps: {
-            ...props,
-        callback: event => {
+      // optional props
+      orientation: props.orientation ? props.orientation : 'portrait',
+    },
+    overrideBackPress: true,
+    animationType: 'none',
+    passProps: {
+      ...props,
+      callback: event => {
         dismissDialog().then(() => {
           if (callback) {
-    callback(event);
-  }
-});
-}
-}
-});
+            callback(event);
+          }
+        });
+      },
+    },
+  });
 }
 function showAlert(props = {}, callback) {
   const dialogProps = {
     // defaults
-    yesText: "OK",
-    noText: "",
+    yesText: 'OK',
+    noText: '',
 
-      ...props
-};
-  showDialog("Dialog", dialogProps, callback);
+    ...props,
+  };
+  showDialog('Dialog', dialogProps, callback);
 }
 function dismissDialog() {
   // RETURNS A PROMISE
   const params = {
-    animationType: "none"
+    animationType: 'none',
   };
-  if (Platform.OS == "ios") {
+  if (Platform.OS == 'ios') {
     return Navigation.dismissModal(params);
   } else {
     return new Promise((resolve, reject) => {
-          Navigation.dismissModal(params);
-    resolve();
-  });
+      Navigation.dismissModal(params);
+      resolve();
+    });
   }
 }
 
@@ -165,13 +158,13 @@ function dismissDialog() {
 // ------------------------
 function showNotification(message, type) {
   Navigation.showInAppNotification({
-    screen: "ViewNotification",
+    screen: 'ViewNotification',
     dismissWithSwipe: true,
     autoDismissTimerSec: 3,
     passProps: {
       message,
-      type
-    }
+      type,
+    },
   });
 }
 
@@ -186,6 +179,5 @@ export default {
   showDialog,
   showAlert,
   dismissDialog,
-  showNotification
+  showNotification,
 };
-
