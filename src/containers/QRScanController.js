@@ -73,6 +73,13 @@ class QRScanController extends Component {
                     }}>
                     <Text style={{width: 100, height:40, backgroundColor:"blue"}}>Scan</Text>
                 </TouchableOpacity>
+                <TouchableOpacity onPress={()=>{
+                    this.props.dispatch(importAccount(Constants.LEDGER_ADDRESS))
+                    .then((balance)=>{ Navigation.dismissModal() })
+                    .catch((error)=>{Navigation.showNotification("Unable to Import Scanned Address", "error")});
+                    }}>
+                    <Text style={{width: 100, height:40, backgroundColor:"blue"}}>Scan</Text>
+                </TouchableOpacity>
                 { this.renderRects() }
             </Camera>
         )

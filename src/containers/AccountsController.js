@@ -6,9 +6,10 @@ import AccountListRow from '../components/AccountListRow'
 import AppStyles from '../util/Styles'
 import Navigation from '../Navigation'
 import Immutable from 'immutable'
+import Constants from '../util/Constants'
 
 
-import {selectAccount, fetchBalance, populateAccounts} from '../reducers/accounts'
+import {selectAccount, fetchAccountInfo, populateAccounts, fetchTransactions} from '../reducers/accounts'
 
 import { connect } from "react-redux";
 
@@ -111,7 +112,7 @@ class AccountsController extends Component {
                         name={rowData.get("name") ? rowData.get("name") : 'no name'}
                         address={rowData.get("address")}
                         key={rowData.get("address")}
-                        balance={rowData.get("balance")}
+                        balance={rowData.getIn(["info", "ETH", "balance"])}
                         onPress= {
                             () => {
                                 highlightRow(sectionID, rowID);

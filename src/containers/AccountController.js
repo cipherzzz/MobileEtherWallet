@@ -2,6 +2,7 @@
 
 import React, { Component, PropTypes } from 'react'
 import { StyleSheet, View, ScrollView, Text, TextInput, TouchableOpacity, ListView } from 'react-native'
+const ScrollableTabView = require("react-native-scrollable-tab-view");
 import AppStyles from '../util/Styles'
 import QrView from '../components/QRView'
 import Blockies from 'react-native-blockies';
@@ -12,9 +13,11 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Clipboard from "react-native-clipboard";
 import Navigation from "../Navigation";
 import TransactionRow from "../components/TransactionRow";
+import TransactionsController from '../containers/TransactionsController';
+import TokensController from '../containers/TokensController';
 
 import { connect } from "react-redux";
-import {setAccountName, deleteAccount, fetchTransactions, fetchBalance, saveAccounts} from '../reducers/accounts';
+import {setAccountName, deleteAccount, fetchTransactions, fetchAccountInfo, saveAccounts} from '../reducers/accounts';
 
 // state map
 function mapStateToProps(state) {
@@ -36,11 +39,6 @@ class AccountController extends Component {
     constructor(props) {
         super(props);
 
-        const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
-        this.state = {
-            dataSource: ds.cloneWithRows(props.transactions),
-        }
-
         this.props.navigator.setButtons({
             rightButtons: [{id: "delete", title: "Delete"}]
         });
@@ -56,95 +54,76 @@ class AccountController extends Component {
 
     }
 
-    componentDidMount(){
-        this.props.dispatch(fetchTransactions(this.props.account));
-    }
+    getTokens() {
 
-    componentWillReceiveProps(newProps) {
-        const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
-        this.state = {
-            dataSource: ds.cloneWithRows(newProps.transactions),
-        }
-    }
+        let balances = [];
+        let tokens = this.props.account.getIn(["info", "tokens"]);
+        tokens.forEach((token) => {
+            let view =  <Text
+                style={{color: Colors.BlackAlmost}}>{Number(token.get("balance"))/100 + " " + token.getIn(["tokenInfo","symbol"])}</Text>
+            balances.push(view);
+        });
 
-    getListOrPlaceholder() {
-        if (this.props.transactions.length === 0) {
-            return (<Text style={styles.introText}>{"No Transactions"}</Text>)
-        } else {
-            return (
-                <ListView
-                    style={[{flex: 1, margin: 5}]}
-                    enableEmptySections={true}
-                    dataSource={this.state.dataSource}
-                    renderSeparator={(sectionId, rowId, adjacentRowHighlighted)=>{return <View key={`sep:${sectionId}:${rowId}`} style={{height: 1}}/>}}
-                    renderSectionHeader={()=>{return <Text key={"header"} style={AppStyles.header}>Transactions</Text>}}
-                    renderRow={(rowData, sectionID: number, rowID: number, highlightRow) => {
-                return (
-                    <TransactionRow
-                        account={this.props.account}
-                        transaction={rowData}
-                        key={rowData.get("hash")+"_"+rowData.get("timeStamp")}
-                        onPress= {
-                            () => {
-                                highlightRow(sectionID, rowID);
-                                //this.props.dispatch(selectAccount(account.get("address"))).then((account)=>{
-                                //    Navigation.push(this.props.navigator, "AccountController");
-                                //});
-                                }
-                            }
-                    />)
-                }}>
-                </ListView>)
-            }
-        }
+        return (
+            <View>
+                {balances}
+            </View>);
+    }
 
     render() {
         return (
-            <ScrollView style={{flex: 1}}>
-                <Text style={{color: Colors.BlackAlmost, margin: 5, fontSize: 15}}>Info</Text>
-                <View style={[styles.wrapper, {backgroundColor: Colors.White, padding: 10}]}>
-                    <View>
-                        <View style={{flexDirection: "row", alignItems: "center", flex: 6}}>
-                            <Blockies
-                                blockies={this.props.account.get("address")} //string content to generate icon
-                                size={50} // blocky icon size
-                                style={{width:50, height:50, backgroundColor: Colors.Grey10, flex: 1}} // style of the view will wrap the icon
-                            />
+            <ScrollView style={{flex: 5}}>
+                <View style={{flex: 2}}>
+                    <Text style={{color: Colors.BlackAlmost, margin: 5, fontSize: 15}}>Info</Text>
+                    <View style={[styles.wrapper, {backgroundColor: Colors.White, padding: 10}]}>
+                        <View>
+                            <View style={{flexDirection: "row", alignItems: "center", flex: 6}}>
+                                <Blockies
+                                    blockies={this.props.account.get("address")} //string content to generate icon
+                                    size={50} // blocky icon size
+                                    style={{width:50, height:50, backgroundColor: Colors.Grey10, flex: 1}} // style of the view will wrap the icon
+                                />
+                                <TouchableOpacity onPress={()=>
+                                    {
+                                    Navigation.showModal("QRView",
+                                    {text: this.props.account.get("address"),
+                                    title: this.props.account.get("name")})
+                                    }}>
+                                    <FontAwesome name={"qrcode"} size={40} color={Colors.Green}/>
+                                </TouchableOpacity>
+                            </View>
                         </View>
-                    </View>
-                    <View style={{flexDirection: "row", alignItems: "center", flex: 6, marginTop: 10}}>
-                        <View style={{flex: 5}}>
-                            <Text style={styles.balance}>Balance</Text>
-                            <Text
-                                style={{color: Colors.BlackAlmost}}>{Number(this.props.account.get("balance"))*Constants.ETH_CONVERSION + " ETH"}</Text>
+                        <View style={{flexDirection: "row", alignItems: "center", flex: 6, marginTop: 10}}>
+                            <View style={{flex: 5}}>
+                                <Text style={styles.balance}>Balance</Text>
+                                <Text
+                                    style={{color: Colors.BlackAlmost}}>{this.props.account.getIn(["info", "ETH", "balance"]) + " ETH"}</Text>
+                                {this.getTokens()}
+                            </View>
                         </View>
-                        <TouchableOpacity onPress={()=>
-                    {
-                    Navigation.showModal("QRView",
-                    {text: this.props.account.get("address"),
-                    title: this.props.account.get("name")})
-                    }}>
-                            <FontAwesome name={"qrcode"} size={40} color={Colors.Green}/>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={{flexDirection: "row", alignItems: "center", flex: 6, marginTop: 10}}>
-                        <View style={{flex: 5}}>
-                            <Text style={styles.address}>Address</Text>
-                            <Text style={{color: Colors.BlackAlmost}}>{this.props.account.get("address")}</Text>
-                        </View>
-                        <TouchableOpacity onPress={()=>{
+                        <View style={{flexDirection: "row", alignItems: "center", flex: 6, marginTop: 10}}>
+                            <View style={{flex: 5}}>
+                                <Text style={styles.address}>Address</Text>
+                                <Text style={{color: Colors.BlackAlmost}}>{this.props.account.get("address")}</Text>
+                            </View>
+                            <TouchableOpacity onPress={()=>{
                     Clipboard.set(this.props.account.get("address"));
                     Navigation.showNotification("Address Copied to Clipboard", "success")
                     }}>
-                            <Ionicon name={"ios-copy-outline"} size={40} color={Colors.Green}/>
-                        </TouchableOpacity>
+                                <Ionicon name={"ios-copy-outline"} size={40} color={Colors.Green}/>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
-                {this.getListOrPlaceholder()}
+                <ScrollableTabView style={{flex: 3}}>
+                    <TransactionsController tabLabel="Transactions"/>
+                    <TokensController tabLabel="Tokens"/>
+                </ScrollableTabView>
             </ScrollView>
         )
     }
 }
+
 
 const styles = StyleSheet.create({
     wrapper: {

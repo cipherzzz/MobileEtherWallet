@@ -12,6 +12,7 @@ class TransactionRow extends Component {
     static propTypes = {
         transaction: PropTypes.object.isRequired,
         account: PropTypes.object.isRequired,
+        token: PropTypes.string.isRequired,
         onPress: PropTypes.func.isRequired,
     }
 
@@ -21,10 +22,11 @@ class TransactionRow extends Component {
 
         const timeStamp = this.props.transaction.get("timeStamp");
         const date = moment(Number(timeStamp)).format("MMM Do YYYY, h:mm:ss a");
-        const amount = this.props.transaction.get("value");
+        const amount = Number(this.props.transaction.get("value"))/100;
         const address = this.props.account.get("address").toLowerCase();
         const to = this.props.transaction.get("to").toLowerCase();
         const from = this.props.transaction.get("from").toLowerCase();
+        const token = this.props.token;
         console.log("to: "+ to);
         console.log("from: "+ from);
         console.log("address: "+ address);
@@ -41,7 +43,7 @@ class TransactionRow extends Component {
                     <Text style={styles.date} numberOfLines={1}>{date}</Text>
                 </View>
                 <View style={styles.amountGroup}>
-                    <Text style={styles.balance} numberOfLines={1}>{Number(amount)*Constants.ETH_CONVERSION + " ETH"}</Text>
+                    <Text style={styles.balance} numberOfLines={1}>{amount + " " + token}</Text>
                 </View>
                 <View style={{flexDirection: "row", alignItems: "center"}}>
                 <Ionicon name={"ios-arrow-dropright-outline"} size={24} color={Colors.Green}/>

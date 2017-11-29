@@ -29,7 +29,7 @@ class AccountListRow extends Component {
                 />
                 <View style={styles.accountDetails}>
                 <Text style={styles.address} ellipsizeMode='middle' numberOfLines={1}>{this.props.address}</Text>
-                <Text style={styles.balance} ellipsizeMode='middle' numberOfLines={1}>{Number(this.props.balance)*Constants.ETH_CONVERSION+" ETH"}</Text>
+                <Text style={styles.balance} ellipsizeMode='middle' numberOfLines={1}>{this.props.balance+" ETH"}</Text>
                 </View>
                 </View>
             </TouchableHighlight>

@@ -1,30 +1,20 @@
 
 import {network} from "../util/Constants";
 import Immutable from 'immutable';
-import {getBalanceRequest, getTransactionsRequest} from "../util/API"
+import {getAccountInfoRequest, getTransactionsRequest, getTokensRequest} from "../util/API"
 import Constants from "../util/Constants";
 import {getAccounts, setAccounts} from "../util/DB";
 
 const ACTION_ACCOUNT_SET_ACCOUNT = 'ACCOUNT_SET_ACCOUNT';
 const ACTION_ACCOUNT_SET_TRANSACTIONS = 'ACCOUNT_SET_TRANSACTIONS';
+const ACTION_ACCOUNT_SET_TOKENS = 'ACCOUNT_SET_TOKENS';
 const ACTION_ACCOUNT_REMOVE_ACCOUNT = 'ACCOUNT_REMOVE_ACCOUNT';
 const ACTION_ACCOUNT_SET_ACCOUNT_NAME = 'ACCOUNT_SET_ACCOUNT_NAME';
-const ACTION_ACCOUNT_SET_ACCOUNT_BALANCE = 'ACCOUNT_SET_ACCOUNT_BALANCE';
+const ACTION_ACCOUNT_SET_ACCOUNT_INFO = 'ACCOUNT_SET_ACCOUNT_BALANCE';
 const ACTION_ACCOUNT_SET_CURRENT_ACCOUNT = 'ACCOUNT_SET_CURRENT_ACCOUNT';
 
 const InitialState = Immutable.fromJS({
-    //list: {
-    //    "0x6E1916C1315b1600232523cF58c726A2F224cCE9": {
-    //        name: "MEW",
-    //        privateKey: "privatekey",
-    //        publicKey: "publickey",
-    //        address: Constants.MEW_ADDRESS,
-    //        balance: "0",
-    //        transactions: []
-    //    }
-    //},
-    //list: getAccountKeys(),
-    currentAccountId: ""
+    currentAccountId: "",
     });
 
 export function populateAccounts() {
@@ -50,16 +40,16 @@ export function importAccount(data) {
         account.privateKey = "";
         account.publicKey = "";
         account.address = data;
-        account.balance = 0.0000000000;
+        account.info = {};
         account.transactions = [];
 
         return new Promise((resolve, reject) => {
 
-            dispatch(fetchBalance(Immutable.fromJS(account)))
-                .then((balance)=>{
+            dispatch(fetchAccountInfo(Immutable.fromJS(account)))
+                .then((info)=>{
 
                     //todo - a little dirty
-                    account.balance = balance;
+                    account.info = info;
                     dispatch(setAccount(Immutable.fromJS(account)));
                     return resolve(account)
                 })
@@ -71,6 +61,26 @@ export function importAccount(data) {
     };
 }
 
+export function fetchTokens(account) {
+
+    return (dispatch, getState) => {
+        return new Promise((resolve, reject) => {
+            const address = account.get("address");
+            fetch(getTokensRequest(address))
+                .then((response)=>{
+                    response.json()
+                        .then((data)=>{
+                            let tokens = Immutable.fromJS(data.operations);
+                            dispatch(setTokens(account, tokens));
+                            return resolve(tokens)
+                        })
+                        .catch((error)=>{return reject(error)});
+                })
+                .catch((error)=>{return reject(error)});
+        })
+    };
+}
+
 export function fetchTransactions(account) {
 
     return (dispatch, getState) => {
@@ -78,9 +88,10 @@ export function fetchTransactions(account) {
             const address = account.get("address");
             fetch(getTransactionsRequest(address))
                 .then((response)=>{
+                    console.log(JSON.stringify(response))
                     response.json()
                         .then((data)=>{
-                            let transactions = Immutable.fromJS(data.result);
+                            let transactions = Immutable.fromJS(data);
                             dispatch(setTransactions(account, transactions));
                             return resolve(transactions)
                         })
@@ -91,18 +102,17 @@ export function fetchTransactions(account) {
     };
 }
 
-export function fetchBalance(account) {
+export function fetchAccountInfo(account) {
     return (dispatch, getState) => {
         return new Promise((resolve, reject) => {
             const address = account.get("address");
-            fetch(getBalanceRequest(address))
+            fetch(getAccountInfoRequest(address))
                 .then((response)=>{
                     response.json()
                             .then((data)=>{
                                 console.log("fetch balance "+JSON.stringify(data));
-                                let balance = data.result;
-                                dispatch(setAccountBalance(account, balance));
-                                return resolve(balance)
+                                dispatch(setAccountInfo(account, data));
+                                return resolve(data)
                             })
                             .catch((error)=>{
                                 return reject(error)
@@ -124,11 +134,11 @@ export function setAccountName(account, name) {
     };
 }
 
-export function setAccountBalance(account, balance) {
+export function setAccountInfo(account, info) {
     return {
-        type: ACTION_ACCOUNT_SET_ACCOUNT_BALANCE,
+        type: ACTION_ACCOUNT_SET_ACCOUNT_INFO,
         accountId: account.get("address"),
-        balance: balance
+        info: info
     };
 }
 
@@ -144,6 +154,14 @@ function setTransactions(account, transactions) {
         type: ACTION_ACCOUNT_SET_TRANSACTIONS,
         account: account,
         transactions: transactions
+    };
+}
+
+function setTokens(account, tokens) {
+    return {
+        type: ACTION_ACCOUNT_SET_TOKENS,
+        account: account,
+        tokens: tokens
     };
 }
 
@@ -215,6 +233,9 @@ export default function reducer(state = InitialState, action) {
         case ACTION_ACCOUNT_SET_TRANSACTIONS:
             return state.setIn(['list', action.account.get("address"), "transactions"], action.transactions);
 
+        case ACTION_ACCOUNT_SET_TOKENS:
+            return state.setIn(['list', action.account.get("address"), "tokens"], action.tokens);
+
         case ACTION_ACCOUNT_REMOVE_ACCOUNT:
             let deletedState = state.deleteIn(['list', action.accountId]);
             setAccounts(deletedState.get('list'));
@@ -223,8 +244,8 @@ export default function reducer(state = InitialState, action) {
         case ACTION_ACCOUNT_SET_ACCOUNT_NAME:
             return state.setIn(['list', action.accountId, "name"], action.name);
 
-        case ACTION_ACCOUNT_SET_ACCOUNT_BALANCE:
-            return state.setIn(['list', action.accountId, "balance"], action.balance);
+        case ACTION_ACCOUNT_SET_ACCOUNT_INFO:
+            return state.setIn(['list', action.accountId, "info"], action.info);
 
         case ACTION_ACCOUNT_SET_CURRENT_ACCOUNT:
             return state.set('currentAccountId', action.accountId);
