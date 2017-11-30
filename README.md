@@ -7,7 +7,7 @@ ERC-20 tokens. This project uses
 [ethplorer.io](https://ethplorer.io/) to create a cross-platform app for **iOS**
 and **Android**.
 
-<img src="https://imgflip.com/gif/209uwa" width="240">
+<img src="https://github.com/wix/react-native/blob/develop/demo.gif?raw=true" width="240">
 
 ### Functionality
 
