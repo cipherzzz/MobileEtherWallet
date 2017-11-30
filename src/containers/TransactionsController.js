@@ -21,6 +21,7 @@ export default class TransactionsController extends Component {
   static propTypes = {
     account: PropTypes.object.isRequired,
     transactions: PropTypes.any.isRequired,
+    onSelect: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -78,9 +79,7 @@ export default class TransactionsController extends Component {
                 key={rowData.get('hash') + '_' + rowData.get('timeStamp')}
                 onPress={() => {
                   highlightRow(sectionID, rowID);
-                  //this.props.dispatch(selectAccount(account.get("address"))).then((account)=>{
-                  //    Navigation.push(this.props.navigator, "AccountController");
-                  //});
+                  this.props.onSelect(rowData);
                 }}
               />
             );

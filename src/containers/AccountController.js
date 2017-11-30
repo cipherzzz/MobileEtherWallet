@@ -196,11 +196,27 @@ class AccountController extends Component {
             tabLabel="Transactions"
             transactions={this.props.transactions}
             account={this.props.account}
+            onSelect={transaction => {
+              Navigation.push(this.props.navigator, 'TransactionController', {
+                passProps: {
+                  transaction: transaction,
+                  account: this.props.account,
+                },
+              });
+            }}
           />
           <TokensController
             tabLabel="Tokens"
             tokens={this.props.tokens}
             account={this.props.account}
+            onSelect={transaction => {
+              Navigation.push(this.props.navigator, 'TransactionController', {
+                passProps: {
+                  transaction: transaction,
+                  account: this.props.account,
+                },
+              });
+            }}
           />
         </ScrollableTabView>
       </ScrollView>

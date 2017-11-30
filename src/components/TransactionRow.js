@@ -6,6 +6,7 @@ import Colors from '../util/Colors';
 import Constants from '../util/Constants';
 import moment from 'moment';
 import Ionicon from 'react-native-vector-icons/Ionicons';
+import { getValueForTransaction } from '../util/Util';
 
 class TransactionRow extends Component {
   static propTypes = {
@@ -22,13 +23,6 @@ class TransactionRow extends Component {
     const to = this.props.transaction.get('to').toLowerCase();
     const from = this.props.transaction.get('from').toLowerCase();
     const token = this.props.token;
-    const amount =
-      token === 'ETH'
-        ? this.props.transaction.get('value')
-        : Number(this.props.transaction.get('value')) / 100;
-    console.log('to: ' + to);
-    console.log('from: ' + from);
-    console.log('address: ' + address);
     const type = address === from ? 'Send' : 'Receive';
     const cellAddress = type === 'Receive' ? from : to;
     const amountColor = address === from ? Colors.RedFlat : Colors.Green;
@@ -61,7 +55,7 @@ class TransactionRow extends Component {
           </View>
           <View style={styles.amountGroup}>
             <Text style={styles.balance} numberOfLines={1}>
-              {amount + ' ' + token}
+              {getValueForTransaction(this.props.transaction) + ' ' + token}
             </Text>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>

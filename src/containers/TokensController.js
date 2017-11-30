@@ -21,6 +21,7 @@ export default class TokensController extends Component {
   static propTypes = {
     account: PropTypes.object.isRequired,
     tokens: PropTypes.any.isRequired,
+    onSelect: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -82,9 +83,7 @@ export default class TokensController extends Component {
                 }
                 onPress={() => {
                   highlightRow(sectionID, rowID);
-                  //this.props.dispatch(selectAccount(account.get("address"))).then((account)=>{
-                  //    Navigation.push(this.props.navigator, "AccountController");
-                  //});
+                  this.props.onSelect(rowData);
                 }}
               />
             );
