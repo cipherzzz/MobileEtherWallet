@@ -99,7 +99,7 @@ class AccountsController extends Component {
     if (this.props.accounts.length === 0) {
       return (
         <Text style={styles.introText}>
-          {"Tap '+' to create an ETH Account"}
+          {"Tap 'Scan' to import an Ethereum Address"}
         </Text>
       );
     } else {

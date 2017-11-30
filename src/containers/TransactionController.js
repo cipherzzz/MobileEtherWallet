@@ -44,6 +44,7 @@ export default class TransactionController extends Component {
   renderInfoRow(header, value) {
     return (
       <View
+        key={header}
         style={{
           flexDirection: 'row',
           alignItems: 'center',
@@ -105,7 +106,10 @@ export default class TransactionController extends Component {
             {this.renderInfoRow('Status', successValue)}
             {this.renderInfoRow('To', this.props.transaction.get('to'))}
             {this.renderInfoRow('From', this.props.transaction.get('from'))}
-            {this.renderInfoRow('Amount', getValueForTransaction(this.props.transaction))}
+            {this.renderInfoRow(
+              'Amount',
+              getValueForTransaction(this.props.transaction),
+            )}
             {this.renderInfoRow('Date', date)}
           </View>
         </View>
