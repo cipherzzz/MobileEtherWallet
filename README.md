@@ -1,13 +1,37 @@
-# MobileEtherWallet
+### Description
 
-This is a simple ethereum mobile wallet utilized using the react-native for both the native iOS and Android platform. 
+**Mobile Ether Wallet** is a simple mobile version of the popular
+[My Ether Wallet](https://www.myetherwallet.com) to view your Ethereum and
+ERC-20 tokens. This project uses
+[react-native](https://facebook.github.io/react-native/) and
+[ethplorer.io](https://ethplorer.io/) to create a cross-platform app for **iOS**
+and **Android**.
 
-It has three major functions
-- Create deposit address
-- Scan deposit QR code
-- Send ether
+<img src="https://imgflip.com/gif/209uwa" width="240">
 
-***Note have to use 'rn-nodeify --install --hack' and add the generated shim.js to the app
+### Functionality
 
-It utilizes the https://infura.io/ webservices for interaction with the ethereum blockchain
+* **Import Ethereum Address(Scan QR)**
+* **View Ethereum/ERC-20 Balances**
+* **View Transactions/Transfers**
 
+### Requirements
+
+* **Yarn or NPM**
+* **XCode Build Tools**
+* **Android SDK**
+* refer to the site for xcode/android build integration
+  [react-native](https://facebook.github.io/react-native/)
+
+### Setup
+
+* **Clone the repo to a project directory** `git clone
+  https://github.com/cipherzzz/MobileEtherWallet.git`
+
+* **Enter the newly cloned project directory** `cd MobileEtherWallet`
+
+* **Install dependencies** `yarn`
+
+* **run on iOS simulator** `react-native run-ios`
+
+* **run on Android simulator** `react-native run-android`
